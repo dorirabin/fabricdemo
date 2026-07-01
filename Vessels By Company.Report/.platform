@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "Report",
+    "displayName": "Vessels By Company"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "37e8d412-6abe-8110-4f41-3486a120afd7"
+  }
+}
