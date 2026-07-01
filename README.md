@@ -1,7 +1,3 @@
-Here is the finalized, comprehensive `README.md` content for your repository. This version synthesizes the architectural decisions we made regarding secure credential management, Git integration, and the maritime data pipeline.
-
----
-
 # 🚢 Maritime Risk Assessment Data Agent ("Company Brain")
 
 This repository provides the architectural blueprint for a maritime insurance "Company Brain." By fusing real-time IoT vessel telemetry with unstructured policy documentation, this solution enables generative AI to execute dynamic, ontology-driven risk and compliance checks.
