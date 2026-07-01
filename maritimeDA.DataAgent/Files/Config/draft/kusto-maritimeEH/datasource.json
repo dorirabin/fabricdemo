@@ -1,0 +1,648 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/dataAgent/definition/dataSource/1.0.0/schema.json",
+  "artifactId": "db89ef0f-02df-8fb5-442c-41f5ba80013b",
+  "workspaceId": "00000000-0000-0000-0000-000000000000",
+  "dataSourceInstructions": "This database contains real-time, enriched AIS telemetry for maritime vessels. \nThe LatestShipPositionsEnriched table is a Materialized View containing ONLY the current, live location and status of each ship. Use this source exclusively to answer questions regarding a ship's current location, speed, heading, and geopolitical risk status.\nFor immediate, up-to-date zone/risk status you need to reference live telemetry/position data from maritimeEH\n\nCRITICAL QUERY RULES & SCHEMA MAP:\n\nDangerous Zones: If a user asks if a ship is in a \"dangerous zone,\" \"high-risk area,\" or \"red zone\", do NOT attempt to calculate geospatial boundaries. You MUST query the LatestShipPositionsEnriched table and evaluate the IsInZone boolean column.\n\nEvaluation Logic: >    - If IsInZone == true, the vessel is in a dangerous location. Report the RiskLevel, ZoneName, and PremiumMultiplier.\n\nIf IsInZone == false, the vessel is in safe waters.\n\nStrict Filtering: Always filter the query by the requested ship name or MMSI to isolate the single record.\n\nRequired KQL Pattern:\nLatestShipPositionsEnriched | where mmsi == <TargetMMSI> or shipname has \"<TargetShipName>\" | project shipname, mmsi, IsInZone, RiskLevel, ZoneName, PremiumMultiplier, EnrichedIngestionTime",
+  "displayName": "maritimeEH",
+  "type": "kusto",
+  "userDescription": "This database contains real-time, enriched AIS telemetry and positional data for maritime vessels. Use this source exclusively to answer questions regarding a ship's current live location, speed, heading, and geopolitical risk status.",
+  "metadata": {},
+  "elements": [
+    {
+      "id": "a4ae67b4-3c27-4a3d-bb58-c30861d6faef",
+      "is_selected": false,
+      "display_name": "Tables",
+      "type": "table_grouping",
+      "description": null,
+      "children": [
+        {
+          "id": "93d61386-e294-464f-8175-c38d6c3a52c1",
+          "is_selected": false,
+          "display_name": "maritimeAIS",
+          "type": "kusto.table",
+          "description": null,
+          "children": [
+            {
+              "id": "IngestionTime",
+              "is_selected": true,
+              "display_name": "IngestionTime",
+              "type": "kusto.column",
+              "data_type": "System.DateTime",
+              "description": null,
+              "children": []
+            },
+            {
+              "id": "MMSI",
+              "is_selected": true,
+              "display_name": "MMSI",
+              "type": "kusto.column",
+              "data_type": "System.Int32",
+              "description": null,
+              "children": []
+            },
+            {
+              "id": "ShipName",
+              "is_selected": true,
+              "display_name": "ShipName",
+              "type": "kusto.column",
+              "data_type": "System.String",
+              "description": null,
+              "children": []
+            },
+            {
+              "id": "VesselType",
+              "is_selected": true,
+              "display_name": "VesselType",
+              "type": "kusto.column",
+              "data_type": "System.String",
+              "description": null,
+              "children": []
+            },
+            {
+              "id": "Latitude",
+              "is_selected": true,
+              "display_name": "Latitude",
+              "type": "kusto.column",
+              "data_type": "System.Double",
+              "description": null,
+              "children": []
+            },
+            {
+              "id": "Longitude",
+              "is_selected": true,
+              "display_name": "Longitude",
+              "type": "kusto.column",
+              "data_type": "System.Double",
+              "description": null,
+              "children": []
+            },
+            {
+              "id": "SpeedKnots",
+              "is_selected": true,
+              "display_name": "SpeedKnots",
+              "type": "kusto.column",
+              "data_type": "System.Double",
+              "description": null,
+              "children": []
+            },
+            {
+              "id": "HeadingDegrees",
+              "is_selected": true,
+              "display_name": "HeadingDegrees",
+              "type": "kusto.column",
+              "data_type": "System.Double",
+              "description": null,
+              "children": []
+            },
+            {
+              "id": "TransmittedUtc",
+              "is_selected": true,
+              "display_name": "TransmittedUtc",
+              "type": "kusto.column",
+              "data_type": "System.String",
+              "description": null,
+              "children": []
+            }
+          ]
+        },
+        {
+          "id": "7087b68d-cea5-4d4a-adc9-8a4223b93517",
+          "is_selected": false,
+          "display_name": "maritimezones_internal",
+          "type": "kusto.table",
+          "description": null,
+          "children": [
+            {
+              "id": "ZoneID",
+              "is_selected": true,
+              "display_name": "ZoneID",
+              "type": "kusto.column",
+              "data_type": "System.String",
+              "description": null,
+              "children": []
+            },
+            {
+              "id": "ZoneName",
+              "is_selected": true,
+              "display_name": "ZoneName",
+              "type": "kusto.column",
+              "data_type": "System.String",
+              "description": null,
+              "children": []
+            },
+            {
+              "id": "RiskLevel",
+              "is_selected": true,
+              "display_name": "RiskLevel",
+              "type": "kusto.column",
+              "data_type": "System.String",
+              "description": null,
+              "children": []
+            },
+            {
+              "id": "PremiumMultiplier",
+              "is_selected": true,
+              "display_name": "PremiumMultiplier",
+              "type": "kusto.column",
+              "data_type": "System.Double",
+              "description": null,
+              "children": []
+            },
+            {
+              "id": "ZonePolygonGeoJSON",
+              "is_selected": true,
+              "display_name": "ZonePolygonGeoJSON",
+              "type": "kusto.column",
+              "data_type": "System.Object",
+              "description": null,
+              "children": []
+            }
+          ]
+        },
+        {
+          "id": "9225350a-b40b-48f7-b022-759fdf11de88",
+          "is_selected": false,
+          "display_name": "maritimeAIS_Enriched",
+          "type": "kusto.table",
+          "description": null,
+          "children": [
+            {
+              "id": "MMSI",
+              "is_selected": true,
+              "display_name": "MMSI",
+              "type": "kusto.column",
+              "data_type": "System.Int32",
+              "description": null,
+              "children": []
+            },
+            {
+              "id": "ShipName",
+              "is_selected": true,
+              "display_name": "ShipName",
+              "type": "kusto.column",
+              "data_type": "System.String",
+              "description": null,
+              "children": []
+            },
+            {
+              "id": "VesselType",
+              "is_selected": true,
+              "display_name": "VesselType",
+              "type": "kusto.column",
+              "data_type": "System.String",
+              "description": null,
+              "children": []
+            },
+            {
+              "id": "Latitude",
+              "is_selected": true,
+              "display_name": "Latitude",
+              "type": "kusto.column",
+              "data_type": "System.Double",
+              "description": null,
+              "children": []
+            },
+            {
+              "id": "Longitude",
+              "is_selected": true,
+              "display_name": "Longitude",
+              "type": "kusto.column",
+              "data_type": "System.Double",
+              "description": null,
+              "children": []
+            },
+            {
+              "id": "SpeedKnots",
+              "is_selected": true,
+              "display_name": "SpeedKnots",
+              "type": "kusto.column",
+              "data_type": "System.Double",
+              "description": null,
+              "children": []
+            },
+            {
+              "id": "HeadingDegrees",
+              "is_selected": true,
+              "display_name": "HeadingDegrees",
+              "type": "kusto.column",
+              "data_type": "System.Double",
+              "description": null,
+              "children": []
+            },
+            {
+              "id": "TransmittedUtc",
+              "is_selected": true,
+              "display_name": "TransmittedUtc",
+              "type": "kusto.column",
+              "data_type": "System.String",
+              "description": null,
+              "children": []
+            },
+            {
+              "id": "IsInZone",
+              "is_selected": true,
+              "display_name": "IsInZone",
+              "type": "kusto.column",
+              "data_type": "System.SByte",
+              "description": null,
+              "children": []
+            },
+            {
+              "id": "ZoneID",
+              "is_selected": true,
+              "display_name": "ZoneID",
+              "type": "kusto.column",
+              "data_type": "System.String",
+              "description": null,
+              "children": []
+            },
+            {
+              "id": "ZoneName",
+              "is_selected": true,
+              "display_name": "ZoneName",
+              "type": "kusto.column",
+              "data_type": "System.String",
+              "description": null,
+              "children": []
+            },
+            {
+              "id": "RiskLevel",
+              "is_selected": true,
+              "display_name": "RiskLevel",
+              "type": "kusto.column",
+              "data_type": "System.String",
+              "description": null,
+              "children": []
+            },
+            {
+              "id": "PremiumMultiplier",
+              "is_selected": true,
+              "display_name": "PremiumMultiplier",
+              "type": "kusto.column",
+              "data_type": "System.Double",
+              "description": null,
+              "children": []
+            },
+            {
+              "id": "EnrichedIngestionTime",
+              "is_selected": true,
+              "display_name": "EnrichedIngestionTime",
+              "type": "kusto.column",
+              "data_type": "System.DateTime",
+              "description": null,
+              "children": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "bd7f00ed-f31a-43b9-a4b7-2db9b77b8ff2",
+      "is_selected": false,
+      "display_name": "Functions",
+      "type": "function_grouping",
+      "description": null,
+      "children": [
+        {
+          "id": "2ec0d81e-e259-4b27-9d1f-3797fc5640f8",
+          "is_selected": false,
+          "display_name": "GetLiveShipPositions",
+          "type": "kusto.function",
+          "description": null,
+          "children": []
+        },
+        {
+          "id": "88a8297d-6828-47e9-9a05-2a5fca9a6ad1",
+          "is_selected": false,
+          "display_name": "GetLiveShipPositionsWithZones",
+          "type": "kusto.function",
+          "description": null,
+          "children": []
+        },
+        {
+          "id": "f387c917-b5a6-4ff8-bf80-52a35e77f0ad",
+          "is_selected": false,
+          "display_name": "EnrichMaritimeAIS",
+          "type": "kusto.function",
+          "description": null,
+          "children": []
+        }
+      ]
+    },
+    {
+      "id": "0cc9ac22-209f-4227-85be-1823a1e7693c",
+      "is_selected": false,
+      "display_name": "Shortcuts",
+      "type": "shortcut_grouping",
+      "description": null,
+      "children": [
+        {
+          "id": "654c35eb-b1b2-4ea5-86e1-a9aa93532786",
+          "is_selected": false,
+          "display_name": "maritimezones",
+          "type": "kusto.external_table",
+          "description": null,
+          "children": [
+            {
+              "id": "ZoneID",
+              "is_selected": true,
+              "display_name": "ZoneID",
+              "type": "kusto.column",
+              "data_type": "System.String",
+              "description": null,
+              "children": []
+            },
+            {
+              "id": "ZoneName",
+              "is_selected": true,
+              "display_name": "ZoneName",
+              "type": "kusto.column",
+              "data_type": "System.String",
+              "description": null,
+              "children": []
+            },
+            {
+              "id": "RiskLevel",
+              "is_selected": true,
+              "display_name": "RiskLevel",
+              "type": "kusto.column",
+              "data_type": "System.String",
+              "description": null,
+              "children": []
+            },
+            {
+              "id": "PremiumMultiplier",
+              "is_selected": true,
+              "display_name": "PremiumMultiplier",
+              "type": "kusto.column",
+              "data_type": "System.Data.SqlTypes.SqlDecimal",
+              "description": null,
+              "children": []
+            },
+            {
+              "id": "ZonePolygonGeoJSON",
+              "is_selected": true,
+              "display_name": "ZonePolygonGeoJSON",
+              "type": "kusto.column",
+              "data_type": "System.String",
+              "description": null,
+              "children": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "e34111ac-d428-4345-999b-8baa416911c5",
+      "is_selected": false,
+      "display_name": "Materialized Views",
+      "type": "materialized_view_grouping",
+      "description": null,
+      "children": [
+        {
+          "id": "56a78c60-6f4d-4aaf-9f49-74a6b256a036",
+          "is_selected": false,
+          "display_name": "LatestShipPositions",
+          "type": "kusto.materialized_view",
+          "description": null,
+          "children": [
+            {
+              "id": "MMSI",
+              "is_selected": true,
+              "display_name": "MMSI",
+              "type": "kusto.column",
+              "data_type": "System.Int32",
+              "description": null,
+              "children": []
+            },
+            {
+              "id": "IngestionTime",
+              "is_selected": true,
+              "display_name": "IngestionTime",
+              "type": "kusto.column",
+              "data_type": "System.DateTime",
+              "description": null,
+              "children": []
+            },
+            {
+              "id": "ShipName",
+              "is_selected": true,
+              "display_name": "ShipName",
+              "type": "kusto.column",
+              "data_type": "System.String",
+              "description": null,
+              "children": []
+            },
+            {
+              "id": "VesselType",
+              "is_selected": true,
+              "display_name": "VesselType",
+              "type": "kusto.column",
+              "data_type": "System.String",
+              "description": null,
+              "children": []
+            },
+            {
+              "id": "Latitude",
+              "is_selected": true,
+              "display_name": "Latitude",
+              "type": "kusto.column",
+              "data_type": "System.Double",
+              "description": null,
+              "children": []
+            },
+            {
+              "id": "Longitude",
+              "is_selected": true,
+              "display_name": "Longitude",
+              "type": "kusto.column",
+              "data_type": "System.Double",
+              "description": null,
+              "children": []
+            },
+            {
+              "id": "SpeedKnots",
+              "is_selected": true,
+              "display_name": "SpeedKnots",
+              "type": "kusto.column",
+              "data_type": "System.Double",
+              "description": null,
+              "children": []
+            },
+            {
+              "id": "HeadingDegrees",
+              "is_selected": true,
+              "display_name": "HeadingDegrees",
+              "type": "kusto.column",
+              "data_type": "System.Double",
+              "description": null,
+              "children": []
+            },
+            {
+              "id": "TransmittedUtc",
+              "is_selected": true,
+              "display_name": "TransmittedUtc",
+              "type": "kusto.column",
+              "data_type": "System.String",
+              "description": null,
+              "children": []
+            },
+            {
+              "id": "CurrentLocation",
+              "is_selected": true,
+              "display_name": "CurrentLocation",
+              "type": "kusto.column",
+              "data_type": "System.Object",
+              "description": null,
+              "children": []
+            }
+          ]
+        },
+        {
+          "id": "ab248f6b-e053-4f41-a697-5f8986e82ffe",
+          "is_selected": true,
+          "display_name": "LatestShipPositionsEnriched",
+          "type": "kusto.materialized_view",
+          "description": null,
+          "children": [
+            {
+              "id": "MMSI",
+              "is_selected": true,
+              "display_name": "MMSI",
+              "type": "kusto.column",
+              "data_type": "System.Int32",
+              "description": null,
+              "children": []
+            },
+            {
+              "id": "EnrichedIngestionTime",
+              "is_selected": true,
+              "display_name": "EnrichedIngestionTime",
+              "type": "kusto.column",
+              "data_type": "System.DateTime",
+              "description": null,
+              "children": []
+            },
+            {
+              "id": "ShipName",
+              "is_selected": true,
+              "display_name": "ShipName",
+              "type": "kusto.column",
+              "data_type": "System.String",
+              "description": null,
+              "children": []
+            },
+            {
+              "id": "VesselType",
+              "is_selected": true,
+              "display_name": "VesselType",
+              "type": "kusto.column",
+              "data_type": "System.String",
+              "description": null,
+              "children": []
+            },
+            {
+              "id": "Latitude",
+              "is_selected": true,
+              "display_name": "Latitude",
+              "type": "kusto.column",
+              "data_type": "System.Double",
+              "description": null,
+              "children": []
+            },
+            {
+              "id": "Longitude",
+              "is_selected": true,
+              "display_name": "Longitude",
+              "type": "kusto.column",
+              "data_type": "System.Double",
+              "description": null,
+              "children": []
+            },
+            {
+              "id": "SpeedKnots",
+              "is_selected": true,
+              "display_name": "SpeedKnots",
+              "type": "kusto.column",
+              "data_type": "System.Double",
+              "description": null,
+              "children": []
+            },
+            {
+              "id": "HeadingDegrees",
+              "is_selected": true,
+              "display_name": "HeadingDegrees",
+              "type": "kusto.column",
+              "data_type": "System.Double",
+              "description": null,
+              "children": []
+            },
+            {
+              "id": "TransmittedUtc",
+              "is_selected": true,
+              "display_name": "TransmittedUtc",
+              "type": "kusto.column",
+              "data_type": "System.String",
+              "description": null,
+              "children": []
+            },
+            {
+              "id": "IsInZone",
+              "is_selected": true,
+              "display_name": "IsInZone",
+              "type": "kusto.column",
+              "data_type": "System.SByte",
+              "description": null,
+              "children": []
+            },
+            {
+              "id": "ZoneID",
+              "is_selected": true,
+              "display_name": "ZoneID",
+              "type": "kusto.column",
+              "data_type": "System.String",
+              "description": null,
+              "children": []
+            },
+            {
+              "id": "ZoneName",
+              "is_selected": true,
+              "display_name": "ZoneName",
+              "type": "kusto.column",
+              "data_type": "System.String",
+              "description": null,
+              "children": []
+            },
+            {
+              "id": "RiskLevel",
+              "is_selected": true,
+              "display_name": "RiskLevel",
+              "type": "kusto.column",
+              "data_type": "System.String",
+              "description": null,
+              "children": []
+            },
+            {
+              "id": "PremiumMultiplier",
+              "is_selected": true,
+              "display_name": "PremiumMultiplier",
+              "type": "kusto.column",
+              "data_type": "System.Double",
+              "description": null,
+              "children": []
+            },
+            {
+              "id": "CurrentLocation",
+              "is_selected": true,
+              "display_name": "CurrentLocation",
+              "type": "kusto.column",
+              "data_type": "System.Object",
+              "description": null,
+              "children": []
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

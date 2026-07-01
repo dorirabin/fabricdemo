@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "Eventstream",
+    "displayName": "maritimeES"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "79c0fcc5-ef4d-a7eb-45c0-6dc31d466623"
+  }
+}

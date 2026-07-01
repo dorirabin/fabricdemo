@@ -1,0 +1,108 @@
+{
+  "sources": [
+    {
+      "id": "58f01b7b-080b-4c2e-bbbd-e430bc34c1f5",
+      "name": "LiveAISSource",
+      "type": "CustomEndpoint",
+      "properties": {}
+    }
+  ],
+  "destinations": [
+    {
+      "id": "f6a92bd6-898f-4d33-a39b-65bd010b23c7",
+      "name": "Eventhouse",
+      "type": "Eventhouse",
+      "properties": {
+        "dataIngestionMode": "DirectIngestion",
+        "workspaceId": "00000000-0000-0000-0000-000000000000",
+        "itemId": "db89ef0f-02df-8fb5-442c-41f5ba80013b",
+        "tableName": "maritimeAIS",
+        "connectionName": "maritimeES_u6zvx0",
+        "mappingRuleName": "maritimeAIS_mapping"
+      },
+      "inputNodes": [
+        {
+          "name": "maritimeES-stream"
+        }
+      ],
+      "inputSchemas": [
+        {
+          "name": "maritimeES-stream",
+          "schema": {
+            "columns": [
+              {
+                "name": "IngestionTime",
+                "type": "Nvarchar(max)",
+                "fields": null,
+                "items": null
+              },
+              {
+                "name": "MMSI",
+                "type": "BigInt",
+                "fields": null,
+                "items": null
+              },
+              {
+                "name": "ShipName",
+                "type": "Nvarchar(max)",
+                "fields": null,
+                "items": null
+              },
+              {
+                "name": "VesselType",
+                "type": "Record",
+                "fields": [],
+                "items": null
+              },
+              {
+                "name": "Latitude",
+                "type": "Float",
+                "fields": null,
+                "items": null
+              },
+              {
+                "name": "Longitude",
+                "type": "Float",
+                "fields": null,
+                "items": null
+              },
+              {
+                "name": "SpeedKnots",
+                "type": "Float",
+                "fields": null,
+                "items": null
+              },
+              {
+                "name": "HeadingDegrees",
+                "type": "BigInt",
+                "fields": null,
+                "items": null
+              },
+              {
+                "name": "TransmittedUtc",
+                "type": "Record",
+                "fields": [],
+                "items": null
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "streams": [
+    {
+      "id": "6eae0fdf-14aa-43d3-b56d-45eb91be4f40",
+      "name": "maritimeES-stream",
+      "type": "DefaultStream",
+      "properties": {},
+      "inputNodes": [
+        {
+          "name": "LiveAISSource"
+        }
+      ]
+    }
+  ],
+  "operators": [],
+  "compatibilityLevel": "1.1"
+}

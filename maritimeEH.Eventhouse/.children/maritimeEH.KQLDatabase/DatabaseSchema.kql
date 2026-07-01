@@ -1,0 +1,90 @@
+// KQL script
+// Use management commands in this script to configure your database items, such as tables, functions, materialized views, and more.
+
+
+.create-merge table maritimeAIS (IngestionTime:datetime, MMSI:int, ShipName:string, VesselType:string, Latitude:real, Longitude:real, SpeedKnots:real, HeadingDegrees:real, TransmittedUtc:string) 
+.create-or-alter table maritimeAIS ingestion json mapping 'maritimeEH2_mapping'
+```
+[{"Properties":{"Path":"$['IngestionTime']"},"column":"IngestionTime","datatype":""},{"Properties":{"Path":"$['MMSI']"},"column":"MMSI","datatype":""},{"Properties":{"Path":"$['ShipName']"},"column":"ShipName","datatype":""},{"Properties":{"Path":"$['VesselType']"},"column":"VesselType","datatype":""},{"Properties":{"Path":"$['Latitude']"},"column":"Latitude","datatype":""},{"Properties":{"Path":"$['Longitude']"},"column":"Longitude","datatype":""},{"Properties":{"Path":"$['SpeedKnots']"},"column":"SpeedKnots","datatype":""},{"Properties":{"Path":"$['HeadingDegrees']"},"column":"HeadingDegrees","datatype":""},{"Properties":{"Path":"$['TransmittedUtc']"},"column":"TransmittedUtc","datatype":""}]
+```
+.create-or-alter table maritimeAIS ingestion json mapping 'maritimeAIS_mapping'
+```
+[{"Properties":{"Path":"$['IngestionTime']"},"column":"IngestionTime","datatype":""},{"Properties":{"Path":"$['MMSI']"},"column":"MMSI","datatype":""},{"Properties":{"Path":"$['ShipName']"},"column":"ShipName","datatype":""},{"Properties":{"Path":"$['VesselType']"},"column":"VesselType","datatype":""},{"Properties":{"Path":"$['Latitude']"},"column":"Latitude","datatype":""},{"Properties":{"Path":"$['Longitude']"},"column":"Longitude","datatype":""},{"Properties":{"Path":"$['SpeedKnots']"},"column":"SpeedKnots","datatype":""},{"Properties":{"Path":"$['HeadingDegrees']"},"column":"HeadingDegrees","datatype":""},{"Properties":{"Path":"$['TransmittedUtc']"},"column":"TransmittedUtc","datatype":""}]
+```
+.create-merge table maritimezones_internal (ZoneID:string, ZoneName:string, RiskLevel:string, PremiumMultiplier:real, ZonePolygonGeoJSON:dynamic) 
+.create-merge table maritimeAIS_Enriched (MMSI:int, ShipName:string, VesselType:string, Latitude:real, Longitude:real, SpeedKnots:real, HeadingDegrees:real, TransmittedUtc:string, IsInZone:bool, ZoneID:string, ZoneName:string, RiskLevel:string, PremiumMultiplier:real, EnrichedIngestionTime:datetime) 
+.create-or-alter function with (skipvalidation = "true") GetLiveShipPositions() {
+    union 
+        (LatestShipPositions), 
+        (maritimeAIS | where IngestionTime > ago(2m))
+    | summarize arg_max(IngestionTime, *) by MMSI
+    | project Latitude, Longitude, ShipName, SpeedKnots, IngestionTime, MMSI
+}
+.create-or-alter function with (skipvalidation = "true") GetLiveShipPositionsWithZones() {
+    // 1. Call your existing function and immediately inject the join key
+    GetLiveShipPositions()
+    | extend DummyJoinKey = 1
+    // 2. Cross-join lookup against your Lakehouse shortcut zones table
+    | lookup kind=leftouter (
+        maritimezones 
+        | extend DummyJoinKey = 1
+    ) on DummyJoinKey
+    // 3. Compute the geospatial intersection math using the stringified JSON shape
+    | extend IsInside = geo_point_in_polygon(
+        todouble(Longitude), 
+        todouble(Latitude), 
+        parse_json(ZonePolygonGeoJSON)
+    )
+    // 4. Clean up the placeholder join key and output the final schema
+    | project-away DummyJoinKey
+    | project IngestionTime, MMSI, ShipName, SpeedKnots, Latitude, Longitude, 
+              IsInside, ZoneID, ZoneName, RiskLevel, PremiumMultiplier
+}
+.create-or-alter function with (skipvalidation = "true") EnrichMaritimeAIS() {
+    // 1. Centralized Zone Definitions (Your internal "lookup" dictionary)
+    let IranZoneId = "RedZone";
+    let IranZoneName = "Iran High Risk Zone - Strait of Hormuz";
+    let IranRisk = "Critical";
+    let IranMultiplier = toreal(5.5);
+    let IranGeo = todynamic('{"type":"Polygon","coordinates":[[[55.8,26.65],[56.25,26.75],[56.6,26.55],[56.85,26.3],[56.65,26.15],[56.1,26.35],[55.8,26.65]]]}');
+    //
+    let Zone2Id = "YellowZone";
+    let Zone2Name = "Western Transit Corridor";
+    let Zone2Risk = "Medium";
+    let Zone2Multiplier = toreal(1.2);
+    let westCorridorGeo = todynamic('{"type":"Polygon","coordinates":[[[54.8,26.55],[55.3,26.45],[55.7,26.35],[55.75,26.15],[55.4,25.95],[54.9,25.85],[54.5,25.95],[54.45,26.3],[54.8, 26.55]]]}');
+    //
+    // 2. Stream Processing Pipeline
+    maritimeAIS
+    | extend 
+        HitIran = geo_point_in_polygon(Longitude, Latitude, IranGeo),
+        HitZone2 = geo_point_in_polygon(Longitude, Latitude, westCorridorGeo)
+    | extend 
+        IsInZone = (HitIran or HitZone2),
+        ZoneID = case(HitIran, IranZoneId, HitZone2, Zone2Id, ""),
+        ZoneName = case(HitIran, IranZoneName, HitZone2, Zone2Name, ""),
+        RiskLevel = case(HitIran, IranRisk, HitZone2, Zone2Risk, ""),
+        PremiumMultiplier = case(HitIran, IranMultiplier, HitZone2, Zone2Multiplier, toreal(1))
+    | project 
+        MMSI, 
+        ShipName, 
+        VesselType, 
+        Latitude, 
+        Longitude, 
+        SpeedKnots, 
+        HeadingDegrees, 
+        TransmittedUtc,
+        IsInZone,                    
+        ZoneID,                      
+        ZoneName,                    
+        RiskLevel,                   
+        PremiumMultiplier, 
+        EnrichedIngestionTime = now()
+}
+.create-or-alter materialized-view  LatestShipPositions on table maritimeAIS { maritimeAIS
+    | extend CurrentLocation = pack("type", "Point", "coordinates", pack_array(Longitude, Latitude))
+    | summarize arg_max(IngestionTime, *) by MMSI }
+.create-or-alter materialized-view  LatestShipPositionsEnriched on table maritimeAIS_Enriched { maritimeAIS_Enriched
+    | extend CurrentLocation = pack("type", "Point", "coordinates", pack_array(Longitude, Latitude))
+    | summarize arg_max(EnrichedIngestionTime, *) by MMSI }
+.alter table maritimeAIS_Enriched policy update "[{\"IsEnabled\":true,\"Source\":\"maritimeAIS\",\"Query\":\"EnrichMaritimeAIS()\",\"IsTransactional\":false,\"PropagateIngestionProperties\":false,\"ManagedIdentity\":null}]"

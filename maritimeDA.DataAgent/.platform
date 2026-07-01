@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "DataAgent",
+    "displayName": "maritimeDA"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "e9727e51-3796-aade-4607-02c8f84ae08d"
+  }
+}

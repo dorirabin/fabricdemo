@@ -1,0 +1,95 @@
+table vessels
+	lineageTag: 8a85fe4c-c4f0-4d57-be91-2921be2b6b4b
+	sourceLineageTag: [dbo].[vessels]
+
+	column MMSI
+		dataType: int64
+		formatString: 0
+		lineageTag: 3899b825-ee97-40b2-8a4c-fad712788537
+		sourceLineageTag: MMSI
+		summarizeBy: sum
+		sourceColumn: MMSI
+
+		annotation SummarizationSetBy = Automatic
+
+	column ShipName
+		dataType: string
+		lineageTag: 3224cffe-2954-46ef-b202-17b46d88536f
+		sourceLineageTag: ShipName
+		summarizeBy: none
+		sourceColumn: ShipName
+
+		annotation SummarizationSetBy = Automatic
+
+	column VesselType
+		dataType: string
+		lineageTag: 359f9a69-bc14-4816-886d-7ff2481a0c8d
+		sourceLineageTag: VesselType
+		summarizeBy: none
+		sourceColumn: VesselType
+
+		annotation SummarizationSetBy = Automatic
+
+	column YearBuilt
+		dataType: int64
+		formatString: 0
+		lineageTag: d01a41b6-1e05-44d5-9775-1a28dcd3e7cd
+		sourceLineageTag: YearBuilt
+		summarizeBy: sum
+		sourceColumn: YearBuilt
+
+		annotation SummarizationSetBy = Automatic
+
+	column HullValue
+		dataType: int64
+		formatString: 0
+		lineageTag: f4798abe-4c04-48b0-9f19-d2f36645d64b
+		sourceLineageTag: HullValue
+		summarizeBy: sum
+		sourceColumn: HullValue
+
+		annotation SummarizationSetBy = Automatic
+
+	column PolicyID
+		dataType: string
+		lineageTag: 2ef78a9f-9d86-413e-8dfd-6c62bfa83946
+		sourceLineageTag: PolicyID
+		summarizeBy: none
+		sourceColumn: PolicyID
+
+		annotation SummarizationSetBy = Automatic
+
+	column CargoID
+		dataType: string
+		lineageTag: 7d409268-0724-409f-89ae-34e26a780697
+		sourceLineageTag: CargoID
+		summarizeBy: none
+		sourceColumn: CargoID
+
+		annotation SummarizationSetBy = Automatic
+
+	column CompanyID
+		dataType: string
+		lineageTag: d55da35b-2d3a-420d-bbb2-89dc8fad1a60
+		sourceLineageTag: CompanyID
+		summarizeBy: none
+		sourceColumn: CompanyID
+
+		annotation SummarizationSetBy = Automatic
+
+	column CompanyName
+		dataType: string
+		lineageTag: 51db2975-f81d-4a32-937d-bccbb6997635
+		sourceLineageTag: CompanyName
+		summarizeBy: none
+		sourceColumn: CompanyName
+
+		annotation SummarizationSetBy = Automatic
+
+	partition vessels = entity
+		mode: directLake
+		source
+			entityName: vessels
+			schemaName: dbo
+			expressionSource: 'DirectLake - maritimeLH'
+

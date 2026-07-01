@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "Notebook",
+    "displayName": "createOntology"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "000a76e1-b899-b799-4f9f-19bc7ad37ad2"
+  }
+}

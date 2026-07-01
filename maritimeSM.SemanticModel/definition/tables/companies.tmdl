@@ -1,0 +1,57 @@
+table companies
+	lineageTag: 572099ba-f3d7-4a00-b68b-d34e68805506
+	sourceLineageTag: [dbo].[companies]
+
+	column CompanyID
+		dataType: string
+		lineageTag: d1b76fce-6a10-4786-8156-72333ab3a596
+		sourceLineageTag: CompanyID
+		summarizeBy: none
+		sourceColumn: CompanyID
+
+		annotation SummarizationSetBy = Automatic
+
+	column CompanyName
+		dataType: string
+		lineageTag: dd6d04f3-eedb-4053-8eaa-bc77cd80185d
+		sourceLineageTag: CompanyName
+		summarizeBy: none
+		sourceColumn: CompanyName
+
+		annotation SummarizationSetBy = Automatic
+
+	column Headquarters
+		dataType: string
+		lineageTag: 58104278-5227-4490-b245-a0e742868642
+		sourceLineageTag: Headquarters
+		summarizeBy: none
+		sourceColumn: Headquarters
+
+		annotation SummarizationSetBy = Automatic
+
+	column TotalFleetSize
+		dataType: int64
+		formatString: 0
+		lineageTag: 20ede8da-4f9d-44bc-a449-173f3a2eec61
+		sourceLineageTag: TotalFleetSize
+		summarizeBy: sum
+		sourceColumn: TotalFleetSize
+
+		annotation SummarizationSetBy = Automatic
+
+	column RiskRating
+		dataType: string
+		lineageTag: a1bc7400-fa20-440f-9c4d-13edb8c5811a
+		sourceLineageTag: RiskRating
+		summarizeBy: none
+		sourceColumn: RiskRating
+
+		annotation SummarizationSetBy = Automatic
+
+	partition companies = entity
+		mode: directLake
+		source
+			entityName: companies
+			schemaName: dbo
+			expressionSource: 'DirectLake - maritimeLH'
+

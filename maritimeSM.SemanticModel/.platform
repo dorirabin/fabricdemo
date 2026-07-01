@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "SemanticModel",
+    "displayName": "maritimeSM"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "136be88c-b327-b3ec-4727-29478343bd76"
+  }
+}

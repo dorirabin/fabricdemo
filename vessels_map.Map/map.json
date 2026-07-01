@@ -1,0 +1,377 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/map/definition/2.0.0/schema.json",
+  "basemap": {
+    "options": {
+      "center": [
+        37.1818775,
+        30.8884963
+      ],
+      "zoom": "4.1",
+      "pitch": "0",
+      "bearing": "0",
+      "style": "satellite_road_labels"
+    }
+  },
+  "dataSources": [
+    {
+      "itemType": "Lakehouse",
+      "workspaceId": "00000000-0000-0000-0000-000000000000",
+      "itemId": "ca5ede5e-3e6a-91c2-42e4-5866e840bf2c"
+    },
+    {
+      "itemType": "KqlDatabase",
+      "workspaceId": "00000000-0000-0000-0000-000000000000",
+      "itemId": "db89ef0f-02df-8fb5-442c-41f5ba80013b"
+    },
+    {
+      "itemType": "Ontology",
+      "workspaceId": "00000000-0000-0000-0000-000000000000",
+      "itemId": "74773e05-0568-b26a-43a3-ac8aeadc0b00"
+    }
+  ],
+  "iconSources": [],
+  "layerSources": [
+    {
+      "id": "8059c739-f485-4274-a3e2-3a8466ae1a6f",
+      "name": "GetLiveShipPositions",
+      "type": "kusto",
+      "options": {
+        "cluster": false
+      },
+      "itemId": "db89ef0f-02df-8fb5-442c-41f5ba80013b",
+      "refreshIntervalMs": 5000
+    },
+    {
+      "id": "8298f9d9-e645-4a1c-b712-24c2e9df0fc4",
+      "name": "hormuz_risk_zone",
+      "type": "geojson",
+      "itemId": "ca5ede5e-3e6a-91c2-42e4-5866e840bf2c",
+      "relativePath": "Files/hormuz_risk_zone.geojson",
+      "refreshIntervalMs": 0
+    },
+    {
+      "id": "62c1594e-56e9-4e77-817b-82eeeba1df12",
+      "name": "HormuzShippingCorridor",
+      "type": "geojson",
+      "itemId": "ca5ede5e-3e6a-91c2-42e4-5866e840bf2c",
+      "relativePath": "Files/HormuzShippingCorridor.geojson",
+      "refreshIntervalMs": 0
+    }
+  ],
+  "layerSettings": [
+    {
+      "id": "b6d76214-f25f-4e6b-8a3d-464afc288be5",
+      "name": "GetLiveShipPositions",
+      "sourceId": "8059c739-f485-4274-a3e2-3a8466ae1a6f",
+      "options": {
+        "color": "#CA5010",
+        "type": "vector",
+        "visible": true,
+        "tooltipKeys": [
+          "Latitude",
+          "Longitude",
+          "ShipName",
+          "SpeedKnots"
+        ],
+        "dataLabelOptions": {
+          "enabled": true,
+          "placement": "point",
+          "fontWeight": "Medium",
+          "color": "#000000",
+          "allowOverlap": true,
+          "size": 12
+        },
+        "dataLabelKeys": [
+          "ShipName"
+        ],
+        "bubbleOptions": {
+          "enableSeriesGroup": true,
+          "color": [
+            "match",
+            [
+              "to-string",
+              [
+                "get",
+                "ShipName"
+              ]
+            ],
+            "",
+            "#732630",
+            "ALBATROS",
+            "#7f2833",
+            "AMALUR",
+            "#8a2935",
+            "ATHENIAN FAITH",
+            "#962b38",
+            "AURORA AF HELSINGBOR",
+            "#a22c3a",
+            "BRANTA",
+            "#ae2e3d",
+            "BRAVIK",
+            "#b92f3f",
+            "BROTT",
+            "#c53142",
+            "BURAK REIS 3",
+            "#d13244",
+            "BURRARD PACIFIC BRZE",
+            "#dd3447",
+            "CHRISTOS XXX",
+            "#e83549",
+            "CORAL FURCATA",
+            "#F4374C",
+            "DH240610",
+            "#f53a4a",
+            "DMS 50",
+            "#f63e48",
+            "ECO LEVANT",
+            "#f74147",
+            "ELLI GLITSCHER",
+            "#f84445",
+            "ENVAR",
+            "#f94843",
+            "FAIRPLAY-55",
+            "#fa4b41",
+            "FALAISE",
+            "#fb4f3f",
+            "FANGZHOU27",
+            "#fc523d",
+            "FERVENT",
+            "#fd553c",
+            "FIDELITAS",
+            "#fe593a",
+            "FIREFLY",
+            "#FF5C38",
+            "FJORDLYS",
+            "#ff6433",
+            "FOURMENTIN",
+            "#ff6d2e",
+            "FRITZ BLESSEY",
+            "#ff752a",
+            "GAS LONG",
+            "#ff7e25",
+            "GC 21",
+            "#ff8620",
+            "GOLD TIDE",
+            "#fe8f1b",
+            "HAMNSKAER",
+            "#fe9716",
+            "HENDRIK H",
+            "#fea011",
+            "HEROS.",
+            "#fea80d",
+            "HESTIA",
+            "#feb108",
+            "HOOPTER MOEWE 2",
+            "#FEB903",
+            "HYDROVAC 12",
+            "#febd11",
+            "INVOTIS X",
+            "#fec11e",
+            "IS SO",
+            "#fec42c",
+            "ISLAND CONSTRUCTOR",
+            "#fec83a",
+            "JALONBORG",
+            "#fecc47",
+            "JOHANN ESSBERGER",
+            "#ffd055",
+            "JULIE GONSOULIN",
+            "#ffd462",
+            "KASPAR HOYER",
+            "#ffd870",
+            "KATORI",
+            "#ffdb7e",
+            "KIALOA III",
+            "#ffdf8b",
+            "LUCKY DRAGON",
+            "#FFE399",
+            "MAINPORT EDGE",
+            "#fbe498",
+            "MARIA",
+            "#f7e597",
+            "MARITA",
+            "#f4e596",
+            "MARLIN LORETO",
+            "#f0e695",
+            "MARTHA",
+            "#ece794",
+            "MARY 1",
+            "#e8e893",
+            "MENJA",
+            "#e4e992",
+            "MISFIT",
+            "#e0ea91",
+            "MISS BETTYE",
+            "#ddea90",
+            "MISTRAL 10",
+            "#d9eb8f",
+            "MOTHER GOOSE",
+            "#D5EC8E",
+            "MSC LEVINA III",
+            "#ceec8b",
+            "MSC OAK F",
+            "#c8eb89",
+            "MSC PORTO III",
+            "#c1eb86",
+            "MSTX 11",
+            "#baeb83",
+            "NICKEL",
+            "#b4eb80",
+            "OHANA",
+            "#adea7e",
+            "PANTER",
+            "#a7ea7b",
+            "PARKER",
+            "#a0ea78",
+            "PAX",
+            "#99ea75",
+            "PIERETTE",
+            "#93e973",
+            "PLANTA JUNIOR",
+            "#8CE970",
+            "PUNTA DO CASTRO",
+            "#86e676",
+            "QUADRANT WARRIOR",
+            "#80e27c",
+            "RANGER",
+            "#7adf82",
+            "RESCUE B MELLGREN",
+            "#74dc88",
+            "RESCUE ULLA KARIN",
+            "#6ed98e",
+            "RIVERQUEST",
+            "#67d593",
+            "ROYAL CANADIAN",
+            "#61d299",
+            "SAVAR",
+            "#5bcf9f",
+            "SCHEUR",
+            "#55cca5",
+            "SCHUB 2636",
+            "#4fc8ab",
+            "SD NETLEY",
+            "#49C5B1",
+            "SEA HUNTER",
+            "#45bbaa",
+            "SEA WHALE",
+            "#42b2a3",
+            "SEASPAN RAPTOR",
+            "#3ea89b",
+            "SEASPAN TRANSPORTER",
+            "#3b9e94",
+            "SEASTAR VIKING",
+            "#37958d",
+            "SEROMA",
+            "#348b86",
+            "SEVEN THUNDERS",
+            "#30827f",
+            "SHAPINSAY",
+            "#2d7878",
+            "SP SPITFIRE",
+            "#296e70",
+            "STATHAV22",
+            "#266569",
+            "THALIA DES SLOPS",
+            "#225B62",
+            "TIDEYE",
+            "#205c5c",
+            "TIM GOLDING",
+            "#1d5d55",
+            "TRIO BUSE TUNC",
+            "#1b5d4f",
+            "TRUBADUREN",
+            "#185e49",
+            "VINDILIS",
+            "#165f43",
+            "VIXENA",
+            "#13603c",
+            "VOILA",
+            "#116136",
+            "WAYFINDER",
+            "#0e6230",
+            "WOJEWODZTWO TORUNSKI",
+            "#0c622a",
+            "XIN HAI TONG 808",
+            "#096323",
+            "ZHONG CHUAN HAI YUN",
+            "#07641D",
+            "#808080"
+          ],
+          "seriesGroup": "ShipName",
+          "sizeType": "fixed",
+          "sizeProperty": "SpeedKnots",
+          "strokeWidth": 1
+        },
+        "pointLayerType": "bubble",
+        "markerOptions": {
+          "iconOptions": {
+            "image": "b6d76214-f25f-4e6b-8a3d-464afc288be5:Square"
+          }
+        },
+        "heatmapWeight": "SpeedKnots",
+        "heatmapOptions": {
+          "weight": [
+            "max",
+            [
+              "get",
+              "SpeedKnots"
+            ],
+            0
+          ],
+          "radius": 20
+        }
+      },
+      "latitudeColumnName": "Latitude",
+      "longitudeColumnName": "Longitude",
+      "filters": []
+    },
+    {
+      "id": "f1b50538-1805-452c-a596-20dffd7d5264",
+      "name": "hormuz_risk_zone",
+      "sourceId": "8298f9d9-e645-4a1c-b712-24c2e9df0fc4",
+      "options": {
+        "color": "#c24646",
+        "type": "vector",
+        "visible": true,
+        "bubbleOptions": {
+          "color": "#c24646"
+        },
+        "markerOptions": {
+          "fillColor": "#c24646"
+        },
+        "lineOptions": {
+          "strokeColor": "#c24646"
+        },
+        "polygonOptions": {
+          "fillColor": "#c24646"
+        },
+        "polygonExtrusionOptions": {
+          "fillColor": "#c24646"
+        },
+        "tooltipKeys": [
+          "name",
+          "severity"
+        ],
+        "dataLabelOptions": {
+          "enabled": true,
+          "placement": "point",
+          "allowOverlap": true
+        },
+        "dataLabelKeys": [
+          "severity",
+          "name"
+        ]
+      }
+    },
+    {
+      "id": "1ab9b150-2bb9-4c88-aea8-aae719f8e9ec",
+      "name": "HormuzShippingCorridor",
+      "sourceId": "62c1594e-56e9-4e77-817b-82eeeba1df12",
+      "options": {
+        "color": "#CA5010",
+        "type": "vector",
+        "visible": true
+      }
+    }
+  ]
+}

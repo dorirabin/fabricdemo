@@ -1,0 +1,59 @@
+table maritimezones
+	lineageTag: d95afa16-b653-4572-a6e7-a8b7b982c2b1
+	sourceLineageTag: [dbo].[maritimezones]
+
+	column ZoneID
+		dataType: string
+		lineageTag: 0687b1a6-dd5a-4e44-9a51-000789bc54e2
+		sourceLineageTag: ZoneID
+		summarizeBy: none
+		sourceColumn: ZoneID
+
+		annotation SummarizationSetBy = Automatic
+
+	column ZoneName
+		dataType: string
+		lineageTag: bfa40b7f-cdf7-44ac-ab29-5ed7e805be9b
+		sourceLineageTag: ZoneName
+		summarizeBy: none
+		sourceColumn: ZoneName
+
+		annotation SummarizationSetBy = Automatic
+
+	column RiskLevel
+		dataType: string
+		lineageTag: 3dc5b992-184f-49e1-80c2-2edd794f9c28
+		sourceLineageTag: RiskLevel
+		summarizeBy: none
+		sourceColumn: RiskLevel
+
+		annotation SummarizationSetBy = Automatic
+
+	column PremiumMultiplier
+		dataType: decimal
+		formatString: \$#,0.###############;(\$#,0.###############);\$#,0.###############
+		lineageTag: 6e81e373-36bf-4956-ba6d-0e741f5f9ff9
+		sourceLineageTag: PremiumMultiplier
+		summarizeBy: sum
+		sourceColumn: PremiumMultiplier
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"currencyCulture":"en-US"}
+
+	column ZonePolygonGeoJSON
+		dataType: string
+		lineageTag: a1578dd3-3b38-496e-9820-259ad41f0fe2
+		sourceLineageTag: ZonePolygonGeoJSON
+		summarizeBy: none
+		sourceColumn: ZonePolygonGeoJSON
+
+		annotation SummarizationSetBy = Automatic
+
+	partition maritimezones = entity
+		mode: directLake
+		source
+			entityName: maritimezones
+			schemaName: dbo
+			expressionSource: 'DirectLake - maritimeLH'
+

@@ -1,0 +1,48 @@
+table cargomaster
+	lineageTag: b5a1dfbf-228f-4da9-aa02-6b046d998de6
+	sourceLineageTag: [dbo].[cargomaster]
+
+	column CargoID
+		dataType: string
+		lineageTag: 9258a908-fe29-4e4d-9155-aca6bc89fca6
+		sourceLineageTag: CargoID
+		summarizeBy: none
+		sourceColumn: CargoID
+
+		annotation SummarizationSetBy = Automatic
+
+	column CargoType
+		dataType: string
+		lineageTag: 6a5fd0a0-54cb-4192-9c63-1655d6ad400c
+		sourceLineageTag: CargoType
+		summarizeBy: none
+		sourceColumn: CargoType
+
+		annotation SummarizationSetBy = Automatic
+
+	column HandlingClass
+		dataType: string
+		lineageTag: 2238f6ad-317d-4a0a-b17e-ddcc25389e69
+		sourceLineageTag: HandlingClass
+		summarizeBy: none
+		sourceColumn: HandlingClass
+
+		annotation SummarizationSetBy = Automatic
+
+	column InsuredValue
+		dataType: int64
+		formatString: 0
+		lineageTag: c04bd262-53b6-48f6-9bea-df01925059f9
+		sourceLineageTag: InsuredValue
+		summarizeBy: sum
+		sourceColumn: InsuredValue
+
+		annotation SummarizationSetBy = Automatic
+
+	partition cargomaster = entity
+		mode: directLake
+		source
+			entityName: cargomaster
+			schemaName: dbo
+			expressionSource: 'DirectLake - maritimeLH'
+

@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "Map",
+    "displayName": "vessels_map"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "a1169074-5e56-8cce-458f-5fc16ba9e1e8"
+  }
+}

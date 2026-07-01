@@ -1,0 +1,52 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/dataAgent/definition/dataSource/1.0.0/schema.json",
+  "artifactId": "74773e05-0568-b26a-43a3-ac8aeadc0b00",
+  "workspaceId": "00000000-0000-0000-0000-000000000000",
+  "dataSourceInstructions": null,
+  "displayName": "maritimeOntologyfromSM",
+  "type": "ontology",
+  "userDescription": null,
+  "metadata": {},
+  "elements": [
+    {
+      "id": "companies",
+      "is_selected": true,
+      "display_name": "companies",
+      "type": "ontology.entity",
+      "description": "CompanyID,CompanyName,Headquarters,TotalFleetSize,RiskRating",
+      "children": []
+    },
+    {
+      "id": "vessels",
+      "is_selected": true,
+      "display_name": "vessels",
+      "type": "ontology.entity",
+      "description": "MMSI,CurrentLocation,ShipName,EnrichedIngestionTime,VesselType,HeadingDegrees,YearBuilt,IsInZone,HullValue,Latitude,PolicyID,Longitude,CargoID,PremiumMultiplier,CompanyID,RiskLevel,CompanyName,SpeedKnots,TransmittedUtc,ZoneID,ZoneName",
+      "children": []
+    },
+    {
+      "id": "maritimezones",
+      "is_selected": true,
+      "display_name": "maritimezones",
+      "type": "ontology.entity",
+      "description": "ZoneID,ZoneName,RiskLevel,PremiumMultiplier,ZonePolygonGeoJSON",
+      "children": []
+    },
+    {
+      "id": "cargomaster",
+      "is_selected": true,
+      "display_name": "cargomaster",
+      "type": "ontology.entity",
+      "description": "CargoID,CargoType,HandlingClass,InsuredValue",
+      "children": []
+    },
+    {
+      "id": "policies",
+      "is_selected": true,
+      "display_name": "policies",
+      "type": "ontology.entity",
+      "description": "PolicyID,PolicyType,Deductible,CoverageLimit",
+      "children": []
+    }
+  ]
+}

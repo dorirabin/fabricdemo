@@ -1,0 +1,49 @@
+table policies
+	lineageTag: fa7a1bd5-913f-4c8f-bcaf-9a0b6089601e
+	sourceLineageTag: [dbo].[policies]
+
+	column PolicyID
+		dataType: string
+		lineageTag: 2f5468f1-fce8-451c-ab5a-24d0ebbdd91c
+		sourceLineageTag: PolicyID
+		summarizeBy: none
+		sourceColumn: PolicyID
+
+		annotation SummarizationSetBy = Automatic
+
+	column PolicyType
+		dataType: string
+		lineageTag: a5d54d5a-f287-4296-9b7d-a32b057daa21
+		sourceLineageTag: PolicyType
+		summarizeBy: none
+		sourceColumn: PolicyType
+
+		annotation SummarizationSetBy = Automatic
+
+	column Deductible
+		dataType: int64
+		formatString: 0
+		lineageTag: e0b4dd60-f021-481f-9ba8-1c3bc07fb4c8
+		sourceLineageTag: Deductible
+		summarizeBy: sum
+		sourceColumn: Deductible
+
+		annotation SummarizationSetBy = Automatic
+
+	column CoverageLimit
+		dataType: int64
+		formatString: 0
+		lineageTag: a719ee61-5362-44f0-918f-cc0b07f9b3fd
+		sourceLineageTag: CoverageLimit
+		summarizeBy: sum
+		sourceColumn: CoverageLimit
+
+		annotation SummarizationSetBy = Automatic
+
+	partition policies = entity
+		mode: directLake
+		source
+			entityName: policies
+			schemaName: dbo
+			expressionSource: 'DirectLake - maritimeLH'
+
