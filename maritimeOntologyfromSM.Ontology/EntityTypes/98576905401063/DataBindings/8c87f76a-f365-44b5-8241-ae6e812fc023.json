@@ -1,0 +1,70 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/ontology/dataBinding/1.0.0/schema.json",
+  "id": "8c87f76a-f365-44b5-8241-ae6e812fc023",
+  "dataBindingConfiguration": {
+    "dataBindingType": "TimeSeries",
+    "timestampColumnName": "EnrichedIngestionTime",
+    "propertyBindings": [
+      {
+        "sourceColumnName": "CurrentLocation",
+        "targetPropertyId": "2172882278400363906"
+      },
+      {
+        "sourceColumnName": "EnrichedIngestionTime",
+        "targetPropertyId": "2172882279851897372"
+      },
+      {
+        "sourceColumnName": "HeadingDegrees",
+        "targetPropertyId": "2172882277580810202"
+      },
+      {
+        "sourceColumnName": "IsInZone",
+        "targetPropertyId": "2172882280603944148"
+      },
+      {
+        "sourceColumnName": "Latitude",
+        "targetPropertyId": "2172882276556862286"
+      },
+      {
+        "sourceColumnName": "Longitude",
+        "targetPropertyId": "2172882278842496228"
+      },
+      {
+        "sourceColumnName": "MMSI",
+        "targetPropertyId": "7053639507539735448"
+      },
+      {
+        "sourceColumnName": "PremiumMultiplier",
+        "targetPropertyId": "2172882277799175830"
+      },
+      {
+        "sourceColumnName": "RiskLevel",
+        "targetPropertyId": "2172882278371478245"
+      },
+      {
+        "sourceColumnName": "SpeedKnots",
+        "targetPropertyId": "2172882279228346123"
+      },
+      {
+        "sourceColumnName": "TransmittedUtc",
+        "targetPropertyId": "2172882278369581947"
+      },
+      {
+        "sourceColumnName": "ZoneID",
+        "targetPropertyId": "2172882276946800005"
+      },
+      {
+        "sourceColumnName": "ZoneName",
+        "targetPropertyId": "2172882278163820420"
+      }
+    ],
+    "sourceTableProperties": {
+      "sourceType": "KustoTable",
+      "workspaceId": "00000000-0000-0000-0000-000000000000",
+      "itemId": "28b77079-2661-bf06-4907-594b1735212b",
+      "clusterUri": "https://trd-sketzz3a64smc48ffd.z1.kusto.fabric.microsoft.com",
+      "databaseName": "maritimeEH",
+      "sourceTableName": "LatestShipPositionsEnriched"
+    }
+  }
+}

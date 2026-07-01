@@ -1,0 +1,63 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/ontology/overviews/1.0.0/schema.json",
+  "widgets": [
+    {
+      "type": "graph",
+      "id": "543c6994-9887-493b-8e28-5ede996a9c48",
+      "title": null
+    },
+    {
+      "type": "file",
+      "id": "5a875741-3091-4e52-98a8-c7280bbdd21f",
+      "title": null
+    },
+    {
+      "type": "barChart",
+      "yAxisPropertyId": "7053639480989339219",
+      "id": "8e4594ae-60cd-41f6-b3de-7a83c52c95ce",
+      "title": "ShipName"
+    },
+    {
+      "type": "barChart",
+      "yAxisPropertyId": "7053639434950927679",
+      "id": "610ecb2a-cd6b-48eb-9390-c0c199dd5cf7",
+      "title": "YearBuilt"
+    },
+    {
+      "type": "barChart",
+      "yAxisPropertyId": "7053639412178074672",
+      "id": "822c1004-4af1-46da-a881-941c07cdc0b3",
+      "title": "HullValue"
+    },
+    {
+      "type": "barChart",
+      "yAxisPropertyId": "7053639385025427186",
+      "id": "9835f63b-d50c-4120-8a8e-3c787ce01b35",
+      "title": "PolicyID"
+    },
+    {
+      "type": "barChart",
+      "yAxisPropertyId": "7053639363328136387",
+      "id": "f1e3d233-a225-4cf6-a87f-ef46ba08539f",
+      "title": "CargoID"
+    },
+    {
+      "type": "barChart",
+      "yAxisPropertyId": "7053639338414702148",
+      "id": "16750799-1236-41b6-8988-ba906e72cf24",
+      "title": "CompanyID"
+    },
+    {
+      "type": "barChart",
+      "yAxisPropertyId": "7053639316571050103",
+      "id": "c3325866-95ae-4dd8-aee1-636b026375eb",
+      "title": "CompanyName"
+    }
+  ],
+  "settings": {
+    "type": "fixedTime",
+    "fixedTimeRange": "Last24Hours",
+    "interval": "ThirtyMinutes",
+    "aggregation": "Average"
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/ontology/dataBinding/1.0.0/schema.json",
+  "id": "8441d09d-8662-41fb-a7e1-b37eb5ef42d5",
+  "dataBindingConfiguration": {
+    "dataBindingType": "NonTimeSeries",
+    "propertyBindings": [
+      {
+        "sourceColumnName": "CargoID",
+        "targetPropertyId": "7053639138319894014"
+      },
+      {
+        "sourceColumnName": "CargoType",
+        "targetPropertyId": "7053639113128733231"
+      },
+      {
+        "sourceColumnName": "HandlingClass",
+        "targetPropertyId": "7053639089672234487"
+      },
+      {
+        "sourceColumnName": "InsuredValue",
+        "targetPropertyId": "7053639069637190504"
+      }
+    ],
+    "sourceTableProperties": {
+      "sourceType": "LakehouseTable",
+      "workspaceId": "00000000-0000-0000-0000-000000000000",
+      "itemId": "ca5ede5e-3e6a-91c2-42e4-5866e840bf2c",
+      "sourceTableName": "cargomaster",
+      "sourceSchema": "dbo"
+    }
+  }
+}

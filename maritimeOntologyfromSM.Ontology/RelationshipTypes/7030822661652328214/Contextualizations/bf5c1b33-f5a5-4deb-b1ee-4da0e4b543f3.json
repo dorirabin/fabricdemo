@@ -1,0 +1,23 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/ontology/contextualization/1.0.0/schema.json",
+  "id": "bf5c1b33-f5a5-4deb-b1ee-4da0e4b543f3",
+  "dataBindingTable": {
+    "workspaceId": "00000000-0000-0000-0000-000000000000",
+    "itemId": "ca5ede5e-3e6a-91c2-42e4-5866e840bf2c",
+    "sourceTableName": "vessels",
+    "sourceSchema": "dbo",
+    "sourceType": "LakehouseTable"
+  },
+  "sourceKeyRefBindings": [
+    {
+      "sourceColumnName": "MMSI",
+      "targetPropertyId": "7053639507539735448"
+    }
+  ],
+  "targetKeyRefBindings": [
+    {
+      "sourceColumnName": "CargoID",
+      "targetPropertyId": "7053639138319894014"
+    }
+  ]
+}

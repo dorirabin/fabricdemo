@@ -1,0 +1,36 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/ontology/dataBinding/1.0.0/schema.json",
+  "id": "c61e8e80-a230-4697-91e8-2e560aec7466",
+  "dataBindingConfiguration": {
+    "dataBindingType": "NonTimeSeries",
+    "propertyBindings": [
+      {
+        "sourceColumnName": "CompanyID",
+        "targetPropertyId": "7053639791319206605"
+      },
+      {
+        "sourceColumnName": "CompanyName",
+        "targetPropertyId": "7053639732585274508"
+      },
+      {
+        "sourceColumnName": "Headquarters",
+        "targetPropertyId": "7053639702810243958"
+      },
+      {
+        "sourceColumnName": "TotalFleetSize",
+        "targetPropertyId": "7053639678332150668"
+      },
+      {
+        "sourceColumnName": "RiskRating",
+        "targetPropertyId": "7053639659148747191"
+      }
+    ],
+    "sourceTableProperties": {
+      "sourceType": "LakehouseTable",
+      "workspaceId": "00000000-0000-0000-0000-000000000000",
+      "itemId": "ca5ede5e-3e6a-91c2-42e4-5866e840bf2c",
+      "sourceTableName": "companies",
+      "sourceSchema": "dbo"
+    }
+  }
+}

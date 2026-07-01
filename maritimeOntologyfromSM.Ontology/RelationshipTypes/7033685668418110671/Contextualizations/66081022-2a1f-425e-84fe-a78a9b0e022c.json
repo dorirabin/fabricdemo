@@ -1,0 +1,23 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/ontology/contextualization/1.0.0/schema.json",
+  "id": "66081022-2a1f-425e-84fe-a78a9b0e022c",
+  "dataBindingTable": {
+    "workspaceId": "00000000-0000-0000-0000-000000000000",
+    "itemId": "ca5ede5e-3e6a-91c2-42e4-5866e840bf2c",
+    "sourceTableName": "vessels",
+    "sourceSchema": "dbo",
+    "sourceType": "LakehouseTable"
+  },
+  "sourceKeyRefBindings": [
+    {
+      "sourceColumnName": "MMSI",
+      "targetPropertyId": "7053639507539735448"
+    }
+  ],
+  "targetKeyRefBindings": [
+    {
+      "sourceColumnName": "PolicyID",
+      "targetPropertyId": "7053639026763900004"
+    }
+  ]
+}

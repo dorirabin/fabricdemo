@@ -1,0 +1,52 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/ontology/dataBinding/1.0.0/schema.json",
+  "id": "4bb7d341-af51-4b3d-a0cd-391c9b9ec9d5",
+  "dataBindingConfiguration": {
+    "dataBindingType": "NonTimeSeries",
+    "propertyBindings": [
+      {
+        "sourceColumnName": "MMSI",
+        "targetPropertyId": "7053639507539735448"
+      },
+      {
+        "sourceColumnName": "ShipName",
+        "targetPropertyId": "7053639480989339219"
+      },
+      {
+        "sourceColumnName": "VesselType",
+        "targetPropertyId": "7053639460114333236"
+      },
+      {
+        "sourceColumnName": "YearBuilt",
+        "targetPropertyId": "7053639434950927679"
+      },
+      {
+        "sourceColumnName": "HullValue",
+        "targetPropertyId": "7053639412178074672"
+      },
+      {
+        "sourceColumnName": "PolicyID",
+        "targetPropertyId": "7053639385025427186"
+      },
+      {
+        "sourceColumnName": "CargoID",
+        "targetPropertyId": "7053639363328136387"
+      },
+      {
+        "sourceColumnName": "CompanyID",
+        "targetPropertyId": "7053639338414702148"
+      },
+      {
+        "sourceColumnName": "CompanyName",
+        "targetPropertyId": "7053639316571050103"
+      }
+    ],
+    "sourceTableProperties": {
+      "sourceType": "LakehouseTable",
+      "workspaceId": "00000000-0000-0000-0000-000000000000",
+      "itemId": "ca5ede5e-3e6a-91c2-42e4-5866e840bf2c",
+      "sourceTableName": "vessels",
+      "sourceSchema": "dbo"
+    }
+  }
+}

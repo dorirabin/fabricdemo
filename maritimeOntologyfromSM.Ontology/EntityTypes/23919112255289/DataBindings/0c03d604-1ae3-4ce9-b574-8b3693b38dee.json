@@ -1,0 +1,32 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/ontology/dataBinding/1.0.0/schema.json",
+  "id": "0c03d604-1ae3-4ce9-b574-8b3693b38dee",
+  "dataBindingConfiguration": {
+    "dataBindingType": "NonTimeSeries",
+    "propertyBindings": [
+      {
+        "sourceColumnName": "PolicyID",
+        "targetPropertyId": "7053639026763900004"
+      },
+      {
+        "sourceColumnName": "PolicyType",
+        "targetPropertyId": "7053639003536471516"
+      },
+      {
+        "sourceColumnName": "Deductible",
+        "targetPropertyId": "7053638978401155390"
+      },
+      {
+        "sourceColumnName": "CoverageLimit",
+        "targetPropertyId": "7053638955620860493"
+      }
+    ],
+    "sourceTableProperties": {
+      "sourceType": "LakehouseTable",
+      "workspaceId": "00000000-0000-0000-0000-000000000000",
+      "itemId": "ca5ede5e-3e6a-91c2-42e4-5866e840bf2c",
+      "sourceTableName": "policies",
+      "sourceSchema": "dbo"
+    }
+  }
+}

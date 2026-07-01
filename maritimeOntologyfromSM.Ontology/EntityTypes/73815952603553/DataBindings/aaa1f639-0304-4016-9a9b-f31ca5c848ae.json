@@ -1,0 +1,36 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/ontology/dataBinding/1.0.0/schema.json",
+  "id": "aaa1f639-0304-4016-9a9b-f31ca5c848ae",
+  "dataBindingConfiguration": {
+    "dataBindingType": "NonTimeSeries",
+    "propertyBindings": [
+      {
+        "sourceColumnName": "ZoneID",
+        "targetPropertyId": "7053639272796487869"
+      },
+      {
+        "sourceColumnName": "ZoneName",
+        "targetPropertyId": "7053639249623323959"
+      },
+      {
+        "sourceColumnName": "RiskLevel",
+        "targetPropertyId": "7053639221314904531"
+      },
+      {
+        "sourceColumnName": "PremiumMultiplier",
+        "targetPropertyId": "7053639201396315964"
+      },
+      {
+        "sourceColumnName": "ZonePolygonGeoJSON",
+        "targetPropertyId": "7053639181751786548"
+      }
+    ],
+    "sourceTableProperties": {
+      "sourceType": "LakehouseTable",
+      "workspaceId": "00000000-0000-0000-0000-000000000000",
+      "itemId": "ca5ede5e-3e6a-91c2-42e4-5866e840bf2c",
+      "sourceTableName": "maritimezones",
+      "sourceSchema": "dbo"
+    }
+  }
+}

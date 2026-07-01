@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "Ontology",
+    "displayName": "maritimeOntologyfromSM"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "74773e05-0568-b26a-43a3-ac8aeadc0b00"
+  }
+}
