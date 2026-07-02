@@ -132,7 +132,13 @@ Together these populate the Eventhouse tables (including the `LatestShipPosition
 
 ### 3. Initialize the Ontology
 
-Import the `createOntology.ipynb` notebook into your Fabric Workspace and run it. It reads the ship data landed in the Eventhouse (Step 2) to build the Lakehouse master/entity tables (Vessels, Companies, Cargo, Policies) and define the business ontology. **Run this only after Step 2 has populated the Eventhouse**, otherwise the entity tables will be empty.
+Import the `createOntology.ipynb` notebook into your Fabric Workspace and run it. It reads the ship data landed in the Eventhouse (Step 2) to populate the **base master/entity tables inside the Lakehouse** (Vessels, Companies, Cargo, Policies). These base tables are the foundation for the rest of the solution:
+
+* **Semantic model** — the `maritimeSM` Direct Lake semantic model is built on top of these Lakehouse tables.
+* **Report** — the Power BI report (`Vessels By Company`) is built on top of that semantic model.
+* **Ontology (first version)** — the notebook also generates the **first version of the ontology component** from the semantic model. This initial ontology captures the static business entities and relationships **before** the real-time position data from the Eventhouse (the `LatestShipPositionsEnriched` materialized view) is bound to the `Vessel` entity.
+
+**Run this only after Step 2 has populated the Eventhouse**, otherwise the base tables — and everything built on them — will be empty.
 
 ### 4. Vectorize & Index Policies
 
