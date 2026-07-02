@@ -4,6 +4,8 @@ This repository provides the architectural blueprint for a maritime insurance "C
 
 ## 🏗 High-Level Architecture
 
+![Vessel Insurance - Fabric Architecture](resources/architecture.jpg)
+
 The solution relies on four core layers integrated within **Microsoft Fabric**:
 
 1. **Ontology Layer:** Defines the semantic relationship between vessels, companies, cargo, and insurance contracts.
