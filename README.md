@@ -123,15 +123,9 @@ To maintain enterprise security, this solution utilizes **Azure Key Vault**:
 2. Ensure your Fabric identity has **"Key Vault Secrets User"** access to the Key Vault.
 3. The `runVessels.ipynb` notebook dynamically fetches these secrets at runtime using `mssparkutils`, ensuring no credentials are ever committed to source control.
 
-### 3. Run Simulations
+### 3. Vectorize & Index Policies
 
-To fully power the "Company Brain," run the following notebooks:
-
-* **`createOntology.ipynb`**: Required first to populate the static metadata and master data tables.
-* **`runVessels.ipynb`**: Creates **real data points** from the live AIS stream — run this continuously to generate and stream real-time telemetry from **[AisStream.io](https://aisstream.io/)** into your Eventhouse.
-* **`runVesselswithSimulation.ipynb`** and **`runVesselswithSimulation2.ipynb`**: Create **two simulated ship itineraries** that deliberately cross the defined risk zones. Once running, open the visual map and ask the **Data Agent** questions about policy coverage, total risk assessment, etc. As each ship enters or exits a risk zone, you will see the agent return **different, context-aware responses** — elevated risk and warranty-breach warnings while inside a risk zone, versus standard coverage responses when outside.
-
-### 4. Vectorize & Index Policies
+> ⚠️ **Build the Azure AI Search index _before_ running the simulations** — the Data Agent needs the policy index in place to answer contractual/warranty questions once the simulated ships start crossing the risk zones.
 
 To enable the Data Agent to understand contractual warranties:
 
@@ -139,9 +133,74 @@ To enable the Data Agent to understand contractual warranties:
 2. **Upload to Lakehouse:** Upload these files from your local clone to your Lakehouse `Files/` directory so they are accessible to the Azure AI Search indexer.
 3. **Index:** Configure an Azure AI Search indexer to vectorize these documents (e.g., using `text-embedding-3-large`).
 
+### 4. Run Simulations
+
+To fully power the "Company Brain," run the following notebooks:
+
+* **`createOntology.ipynb`**: Required first to populate the static metadata and master data tables.
+* **`runVessels.ipynb`**: Creates **real data points** from the live AIS stream — run this continuously to generate and stream real-time telemetry from **[AisStream.io](https://aisstream.io/)** into your Eventhouse.
+* **`runVesselswithSimulation.ipynb`** and **`runVesselswithSimulation2.ipynb`**: Create **two simulated ship itineraries** that deliberately cross the defined risk zones. Once running, open the visual map and ask the **Data Agent** questions about policy coverage, total risk assessment, etc. As each ship enters or exits a risk zone, you will see the agent return **different, context-aware responses** — elevated risk and warranty-breach warnings while inside a risk zone, versus standard coverage responses when outside.
+
 ### 5. Visualize Risks
 
 Connect your Power BI reports/dashboards to the Eventhouse KQL endpoint to visualize live ship movements, high-risk zone infractions, and policy warranty breaches.
+
+## 🤖 Building the Data Agent
+
+The **Maritime Data Agent** ("Company Brain") is the orchestration layer that fuses live telemetry, the business ontology, and unstructured policy text into a single natural-language interface. It is defined in **`maritimeDA.DataAgent`**.
+
+### Data Sources
+
+The agent is grounded on **three** complementary sources — each answering a different part of a risk question:
+
+| # | Source | Type | Role in the Agent |
+| - | ------ | ---- | ----------------- |
+| 1 | **`LatestShipPositionsEnriched`** | Eventhouse materialized view (KQL) | The *live position* source — supplies each ship's current location, speed, heading, and the risk zone it currently occupies (latest row per distinct `MMSI`). |
+| 2 | **`maritimeSM` ontology** | Direct Lake semantic model | The *business context* — resolves a vessel to its operating **Company**, carried **Cargo**, and covering **Policy** (with `RiskRating`, `HullValue`, `CoverageLimit`, `Deductible`, etc.). |
+| 3 | **Azure AI Search policy index** | Vector index (RAG) | The *contractual truth* — retrieves the exact warranty / exclusion clauses from the vectorized policy documents in `/resources`. |
+
+At query time the agent maps a vessel's live coordinates (source 1) onto its contractual context (source 2), then retrieves and cites the relevant policy clauses (source 3) to produce a grounded risk & compliance answer.
+
+### Agent Instructions (System Prompt)
+
+The agent is configured with instructions along these lines:
+
+```text
+You are the Maritime Risk Assessment "Company Brain."
+Answer questions about vessels, their operators, cargo, insurance policies, and
+real-time risk exposure.
+
+Grounding rules:
+- Always resolve a ship's CURRENT location from LatestShipPositionsEnriched
+  (the Eventhouse materialized view — one latest row per MMSI). Never use stale rows.
+- Use the ontology (Vessel → Company / Cargo / Policy) to enrich the ship with its
+  business and contractual context.
+- For any policy, warranty, coverage-limit, deductible, or exclusion question,
+  retrieve and CITE the relevant clause from the Azure AI Search policy index.
+- A vessel is "in a risk zone" only when its latest RiskZone value is a named zone
+  (not null/none). Base risk statements on that live value.
+
+Behavior:
+- If a ship is inside a risk zone, flag elevated risk and call out any breached
+  warranties, plus the financial exposure (HullValue, CoverageLimit, Deductible).
+- If a ship is outside all risk zones, report standard coverage with no active breach.
+- Always state whether your answer is based on live position, ontology, or policy text.
+- Be concise, quantify exposure where possible, and never invent policy terms.
+```
+
+### Few-Shot Prompts
+
+These example prompts demonstrate the different, context-aware answers the agent returns depending on whether a ship is inside or outside a risk zone:
+
+| Prompt | Expected behavior |
+| ------ | ----------------- |
+| *"Where is vessel <ShipName> right now and is it in a risk zone?"* | Reads latest row from `LatestShipPositionsEnriched`; reports live lat/long + current `RiskZone`. |
+| *"What is the total risk assessment for <ShipName>?"* | Joins live position → ontology (Company `RiskRating`, `HullValue`) → policy `CoverageLimit`/`Deductible`; summarizes total exposure. |
+| *"Is <ShipName> in breach of any policy warranty?"* | If inside a risk zone, retrieves the matching warranty/exclusion clause from AI Search and flags the breach; if outside, reports no active breach. |
+| *"Which of my ships are currently inside a high-risk zone?"* | Filters `LatestShipPositionsEnriched` where `RiskZone` is a named zone; lists the affected vessels and their operators. |
+| *"What does the policy say about war-risk zones for <ShipName>?"* | Pure RAG call to the Azure AI Search policy index; quotes and cites the relevant clause. |
+
+> 💡 Try the same prompt twice — once while a simulated ship is **inside** a risk zone and once while it is **outside** — to see the agent's grounded response change in real time.
 
 ## 🛠 Prerequisites
 
