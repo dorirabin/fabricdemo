@@ -100,10 +100,10 @@ All three relationships use **bi-directional cross-filtering**, allowing the Dat
 ```text
 ├── fabric-assets/      # Schema definitions for Eventhouse and Eventstream
 ├── notebooks/          # Fabric Notebooks for initialization and simulation
-│   ├── createOntology.ipynb            # Builds static metadata (Vessels, Companies, Policies)
-│   ├── runVessels.ipynb                # Live telemetry generator streaming to Eventhouse
+│   ├── runVessels.ipynb                # Live telemetry generator streaming to Eventhouse (run first)
 │   ├── runVesselswithSimulation.ipynb  # Simulated ship #1 itinerary crossing risk zones
-│   └── runVesselswithSimulation2.ipynb # Simulated ship #2 itinerary crossing risk zones
+│   ├── runVesselswithSimulation2.ipynb # Simulated ship #2 itinerary crossing risk zones
+│   └── createOntology.ipynb            # Builds entity tables from Eventhouse ship data (run after)
 ├── resources/           # Policy documents (Source of Truth for RAG)
 └── maps/               # Power BI/Real-Time Dashboard definitions
 
@@ -111,11 +111,9 @@ All three relationships use **bi-directional cross-filtering**, allowing the Dat
 
 ## 🚀 Deployment Instructions
 
-### 1. Initialize the Ontology
+> **Order matters.** The ontology creation notebook builds the Lakehouse entity tables **from the ship data already landed in the Eventhouse**. You must therefore populate the Eventhouse with real + simulated ship data **first** (Step 2), and only then build the ontology (Step 3).
 
-Import the `createOntology.ipynb` notebook into your Fabric Workspace and run it. This establishes your Lakehouse master tables and defines the business ontology.
-
-### 2. Configure Security (Azure Key Vault)
+### 1. Configure Security (Azure Key Vault)
 
 To maintain enterprise security, this solution utilizes **Azure Key Vault**:
 
@@ -123,9 +121,22 @@ To maintain enterprise security, this solution utilizes **Azure Key Vault**:
 2. Ensure your Fabric identity has **"Key Vault Secrets User"** access to the Key Vault.
 3. The `runVessels.ipynb` notebook dynamically fetches these secrets at runtime using `mssparkutils`, ensuring no credentials are ever committed to source control.
 
-### 3. Vectorize & Index Policies
+### 2. Run the Vessel & Simulation Notebooks (populate the Eventhouse)
 
-> ⚠️ **Build the Azure AI Search index _before_ running the simulations** — the Data Agent needs the policy index in place to answer contractual/warranty questions once the simulated ships start crossing the risk zones.
+Run these notebooks **first** — they land the real and simulated ship telemetry into the Eventhouse tables that everything else depends on:
+
+* **`runVessels.ipynb`**: Creates **real data points** from the live AIS stream — run this to generate and stream real-time telemetry from **[AisStream.io](https://aisstream.io/)** into your Eventhouse.
+* **`runVesselswithSimulation.ipynb`** and **`runVesselswithSimulation2.ipynb`**: Create **two simulated ship itineraries** that deliberately cross the defined risk zones, also streaming into the Eventhouse.
+
+Together these populate the Eventhouse tables (including the `LatestShipPositionsEnriched` materialized view) with the distinct ships — real and simulated — that the ontology is built from.
+
+### 3. Initialize the Ontology
+
+Import the `createOntology.ipynb` notebook into your Fabric Workspace and run it. It reads the ship data landed in the Eventhouse (Step 2) to build the Lakehouse master/entity tables (Vessels, Companies, Cargo, Policies) and define the business ontology. **Run this only after Step 2 has populated the Eventhouse**, otherwise the entity tables will be empty.
+
+### 4. Vectorize & Index Policies
+
+> ⚠️ **Build the Azure AI Search index before you start asking the Data Agent questions** — the agent needs the policy index in place to answer contractual/warranty questions once the simulated ships are crossing the risk zones.
 
 To enable the Data Agent to understand contractual warranties:
 
@@ -133,17 +144,9 @@ To enable the Data Agent to understand contractual warranties:
 2. **Upload to Lakehouse:** Upload these files from your local clone to your Lakehouse `Files/` directory so they are accessible to the Azure AI Search indexer.
 3. **Index:** Configure an Azure AI Search indexer to vectorize these documents (e.g., using `text-embedding-3-large`).
 
-### 4. Run Simulations
+### 5. Explore & Visualize Risks
 
-To fully power the "Company Brain," run the following notebooks:
-
-* **`createOntology.ipynb`**: Required first to populate the static metadata and master data tables.
-* **`runVessels.ipynb`**: Creates **real data points** from the live AIS stream — run this continuously to generate and stream real-time telemetry from **[AisStream.io](https://aisstream.io/)** into your Eventhouse.
-* **`runVesselswithSimulation.ipynb`** and **`runVesselswithSimulation2.ipynb`**: Create **two simulated ship itineraries** that deliberately cross the defined risk zones. Once running, open the visual map and ask the **Data Agent** questions about policy coverage, total risk assessment, etc. As each ship enters or exits a risk zone, you will see the agent return **different, context-aware responses** — elevated risk and warranty-breach warnings while inside a risk zone, versus standard coverage responses when outside.
-
-### 5. Visualize Risks
-
-Connect your Power BI reports/dashboards to the Eventhouse KQL endpoint to visualize live ship movements, high-risk zone infractions, and policy warranty breaches.
+Open the visual map and ask the **Data Agent** questions about policy coverage, total risk assessment, etc. As each ship enters or exits a risk zone, you will see the agent return **different, context-aware responses** — elevated risk and warranty-breach warnings while inside a risk zone, versus standard coverage responses when outside. Connect your Power BI reports/dashboards to the Eventhouse KQL endpoint to visualize live ship movements, high-risk zone infractions, and policy warranty breaches.
 
 ## 🤖 Building the Data Agent
 
