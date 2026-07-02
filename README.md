@@ -136,7 +136,7 @@ Import the `createOntology.ipynb` notebook into your Fabric Workspace and run it
 
 * **Semantic model** — the `maritimeSM` Direct Lake semantic model is built on top of these Lakehouse tables.
 * **Report** — the Power BI report (`Vessels By Company`) is built on top of that semantic model.
-* **Ontology (first version)** — the notebook also generates the **first version of the ontology component** from the semantic model. This initial ontology captures the static business entities and relationships **before** the real-time position data from the Eventhouse (the `LatestShipPositionsEnriched` materialized view) is bound to the `Vessel` entity.
+* **Ontology (first version)** — the **first version of the ontology component** is generated **manually from the semantic model** (using the *Create ontology* button inside `maritimeSM`), not by the notebook. This initial ontology captures the static business entities and relationships **before** the real-time position data from the Eventhouse (the `LatestShipPositionsEnriched` materialized view) is bound to the `Vessel` entity.
 
 **Run this only after Step 2 has populated the Eventhouse**, otherwise the base tables — and everything built on them — will be empty.
 
