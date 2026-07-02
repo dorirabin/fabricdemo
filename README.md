@@ -21,8 +21,13 @@ The business ontology is materialized in the **`maritimeSM`** semantic model (Di
 Vessel (hub entity)
 ├── operated by ──▶ Company   (CompanyID)
 ├── carries ──────▶ Cargo     (CargoID)
-└── insured by ───▶ Policy    (PolicyID)
+├── insured by ───▶ Policy    (PolicyID)
+└── located at ───▶ LatestShipPositionsEnriched  (Eventhouse MV — live position, keyed by MMSI)
 ```
+
+### Live Position Binding
+
+The **Vessel** entity is bound to the Eventhouse **materialized view** `LatestShipPositionsEnriched`. A materialized view in KQL de-duplicates the incoming AIS stream and keeps only the **most recent record per distinct ship (MMSI)** — so at any point in time the ontology resolves each vessel to its **current, real-time location** (plus enriched attributes such as speed, heading, and the risk zone it currently occupies). This is what lets the Data Agent evaluate risk against a vessel's *live* position rather than a stale snapshot.
 
 ### Entity-Relationship Diagram
 
@@ -31,6 +36,7 @@ erDiagram
     COMPANY ||--o{ VESSEL : "operates"
     CARGO   ||--o{ VESSEL : "loaded on"
     POLICY  ||--o{ VESSEL : "covers"
+    VESSEL  ||--|| LATESTSHIPPOSITIONSENRICHED : "bound to (live position)"
 
     VESSEL {
         int64  MMSI PK
@@ -65,7 +71,19 @@ erDiagram
         int64  Deductible
         int64  CoverageLimit
     }
+
+    LATESTSHIPPOSITIONSENRICHED {
+        int64    MMSI PK
+        double   Latitude
+        double   Longitude
+        double   Sog
+        double   Cog
+        string   RiskZone
+        datetime LastUpdated
+    }
 ```
+
+> **`LATESTSHIPPOSITIONSENRICHED`** is the Eventhouse materialized view (not a Lakehouse table). It is keyed 1:1 to `VESSEL` on `MMSI` and always exposes the single latest enriched position row per distinct ship.
 
 ### Relationships
 
