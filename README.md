@@ -119,9 +119,29 @@ All three relationships use **bi-directional cross-filtering**, allowing the Dat
 
 To maintain enterprise security, this solution utilizes **Azure Key Vault**:
 
-1. Create a Key Vault and add secrets: `AisStreamApiKey` and `FabricConnectionString`.
+1. Create a Key Vault and add the secrets listed in [🔑 Secret Keys](#-secret-keys) below.
 2. Ensure your Fabric identity has **"Key Vault Secrets User"** access to the Key Vault.
 3. The `runVessels.ipynb` notebook dynamically fetches these secrets at runtime using `mssparkutils`, ensuring no credentials are ever committed to source control.
+
+#### 🔑 Secret Keys
+
+Store the following secrets in your Key Vault — **never** hard-code them in notebooks or commit them to source control:
+
+| Secret name | Description | How to obtain |
+| ----------- | ----------- | ------------- |
+| `AisStreamApiKey` | API key used to authenticate to the **AisStream.io** real-time AIS WebSocket feed consumed by `runVessels.ipynb`. | **Must be generated** — see below. |
+| `FabricConnectionString` | Connection string used to write telemetry into your Fabric Eventhouse / Lakehouse. | From your Fabric workspace item settings. |
+
+**Generating the AisStream.io API key**
+
+The `AisStreamApiKey` is not provided with this repo — you must generate your own:
+
+1. Create a free account at **[AisStream.io](https://aisstream.io/)**.
+2. Generate an API key from your account dashboard.
+3. Follow the official authentication guide: **<https://aisstream.io/documentation#Authentication>**.
+4. Add the generated key to Key Vault as the secret named `AisStreamApiKey`.
+
+> The AisStream.io WebSocket API requires this key to be sent in the subscription message on connect. Without a valid key the live telemetry stream in `runVessels.ipynb` will fail to authenticate. See the [Authentication docs](https://aisstream.io/documentation#Authentication) for the exact message format.
 
 ### 2. Run the Vessel & Simulation Notebooks (populate the Eventhouse)
 
@@ -218,6 +238,7 @@ These example prompts demonstrate the different, context-aware answers the agent
 * A **Microsoft Fabric** capacity (Trial or Premium).
 * **Azure Key Vault** for secure credential management.
 * **Azure AI Search** for policy vectorization.
+* An **[AisStream.io](https://aisstream.io/)** account with a generated **API key** — see [🔑 Secret Keys](#-secret-keys) and the [Authentication docs](https://aisstream.io/documentation#Authentication).
 
 ## 👨‍💻 Author
 
