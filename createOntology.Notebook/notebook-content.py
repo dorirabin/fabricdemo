@@ -24,6 +24,28 @@
 
 from pyspark.sql.functions import col, rand, when, lit, expr, round
 
+# METADATA ********************
+
+# META {
+# META   "language": "python",
+# META   "language_group": "synapse_pyspark"
+# META }
+
+# CELL ********************
+
+# Configuration: Update these values after deployment
+kusto_cluster = "https://trd-sketzz3a64smc48ffd.z1.kusto.fabric.microsoft.com"
+kusto_db = "maritimeEH"
+
+# METADATA ********************
+
+# META {
+# META   "language": "python",
+# META   "language_group": "synapse_pyspark"
+# META }
+
+# CELL ********************
+
 # 1. CREATE CARGO MASTER (The "What" is being insured)
 cargo_data = [
     ("C01", "Crude Oil", "Hazardous", 85000000), 
@@ -131,8 +153,6 @@ final_maritime_zones_df.write.format("delta").mode("overwrite").option("overwrit
 # 4. ENRICHED VESSEL MASTER (Linking Age to Hull Value)
 # Pull unique vessels from the real-time 'maritimeAIS' table in your Eventhouse (Kusto)
 
-kusto_cluster = "https://trd-sketzz3a64smc48ffd.z1.kusto.fabric.microsoft.com"
-kusto_db = "maritimeEH"
 kusto_query = "maritimeAIS | summarize arg_max(TransmittedUtc, *) by MMSI | project MMSI, ShipName, VesselType"
 
 vessel_raw_df = (

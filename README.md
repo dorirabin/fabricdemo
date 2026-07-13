@@ -113,24 +113,142 @@ All three relationships use **bi-directional cross-filtering**, allowing the Dat
 
 ## 🚀 Deployment Instructions
 
-> **Order matters.** The ontology creation notebook builds the Lakehouse entity tables **from the ship data already landed in the Eventhouse**. You must therefore populate the Eventhouse with real + simulated ship data **first** (Step 2), and only then build the ontology (Step 3).
+### Quick Start
 
-### 1. Configure Security (Azure Key Vault)
+**For most users**: Clone this repository and run `deployworkspace.ipynb` to deploy all 18 Fabric items in ~3 minutes with automatic dependency management.
 
-To maintain enterprise security, this solution utilizes **Azure Key Vault**:
+```bash
+git clone https://github.com/dorirabin/fabricdemo.git
+cd fabricdemo
+pip install azure-identity fabric-cicd requests
+code deployworkspace.ipynb  # Open in VS Code and run cells 1-9
+```
+
+After deployment, configure Azure Key Vault secrets and run the vessel notebooks to populate data.
+
+---
+
+This solution can be deployed in two ways:
+1. **Automated Deployment** (Recommended): Deploy all Fabric items from Git in one step using `deployworkspace.ipynb`
+2. **Manual Deployment**: Create items individually in the Fabric portal
+
+### Automated Deployment from Git (Recommended)
+
+This repository includes an automated deployment notebook that deploys all 18 Fabric items with proper dependency management in a single execution.
+
+#### Prerequisites
+
+1. **Python Environment**:
+   ```bash
+   pip install azure-identity fabric-cicd requests
+   ```
+
+2. **Git Clone**:
+   ```bash
+   git clone https://github.com/dorirabin/fabricdemo.git
+   cd fabricdemo
+   ```
+
+3. **Microsoft Fabric Workspace**: Create an empty Fabric workspace or use an existing one
+
+#### Deployment Steps
+
+1. **Open the deployment notebook** in VS Code or Jupyter:
+   ```bash
+   code deployworkspace.ipynb
+   ```
+
+2. **Authenticate**: Run cells 1-5 to authenticate with Azure and select your target workspace
+   - The notebook uses `DeviceCodeCredential` for browser-based authentication
+   - You'll be prompted to select your target workspace from the list
+
+3. **Deploy all items**: Run cell 9 to execute the complete 6-phase deployment:
+   - **Phase 1**: Lakehouse + Eventhouse (data foundation)
+     - Automatically uploads GeoJSON files to Lakehouse Files
+   - **Phase 2**: SemanticModel + Power BI Report
+     - Automatically updates DirectLake connection to new Lakehouse
+   - **Phase 3**: Ontology
+     - Automatically links to deployed Power BI report
+   - **Phase 4**: Notebooks + Eventstream + Data Agent
+   - **Phase 5**: Reflex (alert/activator)
+   - **Phase 6**: Map (depends on Ontology)
+
+4. **Verify deployment**: The notebook automatically verifies all 18 items are deployed correctly
+
+#### What Gets Deployed
+
+The automated deployment creates:
+- **1 Lakehouse** (`maritimeLH`) with 2 GeoJSON files
+- **1 Eventhouse** (`maritimeEH`) with KQL Database
+- **1 SemanticModel** (`maritimeSM`) with DirectLake connection
+- **1 Power BI Report** (`Vessels By Company`)
+- **1 Ontology** (`maritimeOntologyfromSM`) linked to the report
+- **4 Notebooks** (createOntology, runVessels, runVesselswithSimulation, runVesselswithSimulation2)
+- **1 Eventstream** (`maritimeES`)
+- **1 Data Agent** (`maritimeDA`)
+- **1 Reflex** (`RedAlertActivator`)
+- **1 Map** (`vessels_map`)
+
+> 💡 **Important**: The deployment notebook handles all dependencies automatically - workspace references, lakehouse IDs, and resource links are dynamically updated during deployment.
+
+After automated deployment completes, proceed to **Configure Security** below.
+
+---
+
+### Manual Deployment (Alternative)
+
+If you prefer to deploy items manually through the Fabric portal instead of using the automated notebook:
+
+1. Create each Fabric item type manually in the portal (Lakehouse, Eventhouse, SemanticModel, Report, Ontology, Notebooks, Eventstream, Data Agent, Reflex, Map)
+2. Upload the corresponding files from the cloned repository to each item
+3. Manually update workspace references, lakehouse IDs, and resource links in the configurations
+4. Upload GeoJSON files from `/resources` folder to Lakehouse Files
+
+> ⚠️ **Manual deployment requires careful attention to dependencies**: The SemanticModel must reference the correct Lakehouse, the Ontology must link to the deployed Report, etc. The automated deployment handles this automatically.
+
+---
+
+## Post-Deployment Configuration
+
+After deploying the Fabric items (either automated or manual), complete the following configuration steps:
+
+### 1. Configure Security and API Keys
+
+This solution requires API keys and connection strings to connect to external services (AisStream.io) and Fabric resources.
+
+#### Production Environment (Recommended: Azure Key Vault)
+
+For **production deployments**, use **Azure Key Vault** to maintain enterprise security:
 
 1. Create a Key Vault and add the secrets listed in [🔑 Secret Keys](#-secret-keys) below.
 2. Ensure your Fabric identity has **"Key Vault Secrets User"** access to the Key Vault.
-3. The `runVessels.ipynb` notebook dynamically fetches these secrets at runtime using `mssparkutils`, ensuring no credentials are ever committed to source control.
+3. Update the `runVessels.ipynb` notebook to fetch secrets using `mssparkutils.credentials.getSecret()`.
+
+#### Local Testing/Development (Direct Keys)
+
+For **local testing and development**, you can directly embed keys in the notebooks:
+
+1. Open the notebook files (e.g., `runVessels.ipynb`)
+2. Replace Key Vault references with direct string values:
+   ```python
+   # Instead of: ais_api_key = mssparkutils.credentials.getSecret("your-keyvault", "AisStreamApiKey")
+   # Use: ais_api_key = "your-actual-api-key-here"
+   ```
+3. **⚠️ IMPORTANT**: Never commit notebooks with embedded secrets to source control. Add them to `.gitignore` or use environment variables.
+
+> 💡 **Best Practice**: Use Key Vault for production and team environments. Use direct keys only for local experimentation on your development machine.
 
 #### 🔑 Secret Keys
 
-Store the following secrets in your Key Vault — **never** hard-code them in notebooks or commit them to source control:
+The following credentials are required for the solution to function:
 
-| Secret name | Description | How to obtain |
-| ----------- | ----------- | ------------- |
-| `AisStreamApiKey` | API key used to authenticate to the **AisStream.io** real-time AIS WebSocket feed consumed by `runVessels.ipynb`. | **Must be generated** — see below. |
-| `FabricConnectionString` | Connection string used to write telemetry into your Fabric Eventhouse / Lakehouse. | From your Fabric workspace item settings. |
+| Secret name | Description | How to obtain | Required for |
+| ----------- | ----------- | ------------- | ------------ |
+| `AisStreamApiKey` | API key used to authenticate to the **AisStream.io** real-time AIS WebSocket feed consumed by `runVessels.ipynb`. | **Must be generated** — see below. | Real-time vessel telemetry streaming |
+| `FabricConnectionString` | Connection string used to write telemetry into your Fabric Eventhouse / Lakehouse. | From your Fabric workspace item settings. | Data ingestion |
+
+**For Production**: Store these as secrets in Azure Key Vault with the names shown above.  
+**For Local Testing**: Use the values directly in your notebook code (but never commit them to Git).
 
 **Generating the AisStream.io API key**
 
@@ -139,11 +257,35 @@ The `AisStreamApiKey` is not provided with this repo — you must generate your 
 1. Create a free account at **[AisStream.io](https://aisstream.io/)**.
 2. Generate an API key from your account dashboard.
 3. Follow the official authentication guide: **<https://aisstream.io/documentation#Authentication>**.
-4. Add the generated key to Key Vault as the secret named `AisStreamApiKey`.
+4. **For Production**: Add the generated key to Key Vault as the secret named `AisStreamApiKey`.  
+   **For Local Testing**: Use the key directly in your notebook code.
 
 > The AisStream.io WebSocket API requires this key to be sent in the subscription message on connect. Without a valid key the live telemetry stream in `runVessels.ipynb` will fail to authenticate. See the [Authentication docs](https://aisstream.io/documentation#Authentication) for the exact message format.
 
 ### 2. Run the Vessel & Simulation Notebooks (populate the Eventhouse)
+
+> ⚠️ **IMPORTANT: Update Eventstream Connection Details First**  
+> Before running the vessel notebooks, you must update the Eventstream custom endpoint connection details:
+> 
+> **Why**: The `LiveAISSource` Eventstream custom endpoint regenerates with a new Event Hub name and connection string after Git deployment. The hardcoded `FABRIC_ENTITY_NAME` and connection string in the notebooks will be stale and point to the old endpoint.
+> 
+> **How to fix**:
+> 1. Open the `maritimeES` Eventstream in the Fabric portal
+> 2. Navigate to the custom endpoint (LiveAISSource) settings
+> 3. Go to the **SAS Key Authentication** tab → **Live view**
+> 4. Copy the new **Connection string** value
+> 5. Update the notebooks (`runVessels.ipynb`, `runVesselswithSimulation.ipynb`, `runVesselswithSimulation2.ipynb`) with:
+>    - The new connection string
+>    - The new entity name (extract from `EntityPath=` in the connection string)
+> 
+> **💡 Pro Tip**: Instead of hardcoding `FABRIC_ENTITY_NAME`, parse it from the connection string:
+> ```python
+> # Extract entity name from connection string automatically
+> import re
+> connection_string = "Endpoint=sb://...;EntityPath=eventstream-xxxxx-..."
+> entity_name = re.search(r'EntityPath=([^;]+)', connection_string).group(1)
+> ```
+> This way you only need to update the connection string, and the entity name is derived automatically.
 
 Run these notebooks **first** — they land the real and simulated ship telemetry into the Eventhouse tables that everything else depends on:
 
@@ -236,7 +378,7 @@ These example prompts demonstrate the different, context-aware answers the agent
 ## 🛠 Prerequisites
 
 * A **Microsoft Fabric** capacity (Trial or Premium).
-* **Azure Key Vault** for secure credential management.
+* **Azure Key Vault** (recommended for production; optional for local testing - see [Configure Security](#1-configure-security-and-api-keys)).
 * **Azure AI Search** for policy vectorization.
 * An **[AisStream.io](https://aisstream.io/)** account with a generated **API key** — see [🔑 Secret Keys](#-secret-keys) and the [Authentication docs](https://aisstream.io/documentation#Authentication).
 

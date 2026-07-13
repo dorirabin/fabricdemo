@@ -1,0 +1,29 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "ZoneID": "RedZone",
+        "ZoneName": "Iran High Risk Zone - Strait of Hormuz",
+        "description": "Northern maritime boundary and monitoring zone",
+        "RiskLevel": "Critical",
+        "PremiumMultiplier": 5.5
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [55.80, 26.65],
+            [56.25, 26.75],
+            [56.60, 26.55],
+            [56.85, 26.30],
+            [56.65, 26.15],
+            [56.10, 26.35],
+            [55.80, 26.65]
+          ]
+        ]
+      }
+    }
+  ]
+}

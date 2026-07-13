@@ -1,0 +1,31 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "ZoneID": "YellowZone",
+        "ZoneName": "Western Transit Corridor",
+        "description": "Primary approach lane for the Strait of Hormuz",
+        "RiskLevel": "Medium",
+        "PremiumMultiplier": 1.2
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [54.80, 26.55],
+            [55.30, 26.45],
+            [55.70, 26.35],
+            [55.75, 26.15],
+            [55.40, 25.95],
+            [54.90, 25.85],
+            [54.50, 25.95],
+            [54.45, 26.30],
+            [54.80, 26.55]
+          ]
+        ]
+      }
+    }
+  ]
+}
