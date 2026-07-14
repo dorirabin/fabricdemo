@@ -26,6 +26,49 @@
 
 # CELL ********************
 
+# ========================================
+# 🔧 CONFIGURATION - UPDATE AFTER DEPLOYMENT
+# ========================================
+# 
+# ⚠️ REQUIRED: Update these values after deploying the Eventstream
+#
+# 1. FABRIC_ENTITY_NAME: Event Hub name from Eventstream custom endpoint
+#    - Navigate to: Fabric Portal → Workspace → maritimeES Eventstream → LiveAISSource
+#    - Go to: SAS Key Authentication → Live view
+#    - Copy the Event Hub name (e.g., "esehchxkj881x95xl1hgnk_eh")
+#
+# 2. FABRIC_CONNECTION_STR: Connection string from same location
+#    - Copy the full connection string starting with "Endpoint=sb://..."
+#
+# 3. AISSTREAM_API_KEY: Your AisStream.io API key
+#    - Generate at: https://aisstream.io/ (free account)
+#    - Store in Azure Key Vault for production OR set directly for testing
+#
+
+# Event Hub Configuration (from Eventstream custom endpoint)
+FABRIC_ENTITY_NAME = "esehchxkj881x95xl1hgnk_eh"  # ← UPDATE THIS with your Event Hub name
+
+# Security Configuration
+# Option 1 (Production): Use Azure Key Vault
+KEY_VAULT_NAME = "https://kv-maritime-demo.vault.azure.net/"  # ← UPDATE THIS with your Key Vault URL
+AISSTREAM_API_KEY = mssparkutils.credentials.getSecret(KEY_VAULT_NAME, "AisStreamApiKey")
+FABRIC_CONNECTION_STR = mssparkutils.credentials.getSecret(KEY_VAULT_NAME, "FabricConnectionString")
+
+# Option 2 (Local Testing): Use direct values (NEVER commit to Git!)
+# AISSTREAM_API_KEY = "your-aisstream-api-key-here"
+# FABRIC_CONNECTION_STR = "Endpoint=sb://xxxxx.servicebus.windows.net/;SharedAccessKeyName=...;SharedAccessKey=...;EntityPath=esehchxkj881x95xl1hgnk_eh"
+
+# ========================================
+
+# METADATA ********************
+
+# META {
+# META   "language": "python",
+# META   "language_group": "synapse_pyspark"
+# META }
+
+# CELL ********************
+
 import os
 import asyncio
 import json
@@ -36,22 +79,6 @@ from datetime import datetime, timezone
 import websockets
 from notebookutils import mssparkutils 
 from azure.eventhub import EventHubProducerClient, EventData
-
-
-KEY_VAULT_NAME = "https://kv-maritime-demo.vault.azure.net/"
-FABRIC_ENTITY_NAME = "esehchxkj881x95xl1hgnk_eh" 
-# Retrieve secrets
-AISSTREAM_API_KEY = mssparkutils.credentials.getSecret(KEY_VAULT_NAME, "AisStreamApiKey")
-FABRIC_CONNECTION_STR = mssparkutils.credentials.getSecret(KEY_VAULT_NAME, "FabricConnectionString")
-
-
-# Basic validation to fail fast if configuration is missing
-if not AISSTREAM_API_KEY:
-    raise ValueError("AISSTREAM_API_KEY is not set. Configure it as an environment variable/Spark config or hardcode a test value in this cell.")
-if not FABRIC_CONNECTION_STR:
-    raise ValueError("FABRIC_CONNECTION_STR is not set. Configure it as an environment variable/Spark config or hardcode a test value in this cell.")
-if not FABRIC_ENTITY_NAME:
-    raise ValueError("FABRIC_ENTITY_NAME is not set. Configure it as an environment variable/Spark config or hardcode a test value in this cell.")
 
 TARGET_BOUNDING_BOX = [[[-90, -180], [90, 180]]]
 

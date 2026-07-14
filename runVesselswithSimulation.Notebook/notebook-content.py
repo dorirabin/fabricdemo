@@ -24,16 +24,48 @@
 
 # CELL ********************
 
+# ========================================
+# 🔧 CONFIGURATION - UPDATE AFTER DEPLOYMENT
+# ========================================
+# 
+# ⚠️ REQUIRED: Update these values after deploying the Eventstream
+#
+# 1. FABRIC_ENTITY_NAME: Event Hub name from Eventstream custom endpoint
+#    - Navigate to: Fabric Portal → Workspace → maritimeES Eventstream → LiveAISSource
+#    - Go to: SAS Key Authentication → Live view
+#    - Copy the Event Hub name (e.g., "esehchxkj881x95xl1hgnk_eh")
+#
+# 2. FABRIC_CONNECTION_STR: Connection string from same location
+#    - Copy the full connection string starting with "Endpoint=sb://..."
+#
+
+# Event Hub Configuration (from Eventstream custom endpoint)
+FABRIC_ENTITY_NAME = "esehchxkj881x95xl1hgnk_eh"  # ← UPDATE THIS with your Event Hub name
+
+# Security Configuration
+# Option 1 (Production): Use Azure Key Vault
+KEY_VAULT_NAME = "https://kv-maritime-demo.vault.azure.net/"  # ← UPDATE THIS with your Key Vault URL
+FABRIC_CONNECTION_STR = mssparkutils.credentials.getSecret(KEY_VAULT_NAME, "FabricConnectionString")
+
+# Option 2 (Local Testing): Use direct value (NEVER commit to Git!)
+# FABRIC_CONNECTION_STR = "Endpoint=sb://xxxxx.servicebus.windows.net/;SharedAccessKeyName=...;SharedAccessKey=...;EntityPath=esehchxkj881x95xl1hgnk_eh"
+
+# ========================================
+
+# METADATA ********************
+
+# META {
+# META   "language": "python",
+# META   "language_group": "synapse_pyspark"
+# META }
+
+# CELL ********************
+
 import time
 import json
 import numpy as np
 from datetime import datetime, timezone
 from azure.eventhub import EventHubProducerClient, EventData
-
-# --- CONFIGURATION ---
-KEY_VAULT_NAME = "https://kv-maritime-demo.vault.azure.net/"
-FABRIC_ENTITY_NAME = "esehchxkj881x95xl1hgnk_eh" 
-FABRIC_CONNECTION_STR = mssparkutils.credentials.getSecret(KEY_VAULT_NAME, "FabricConnectionString")
 
 def generate_sync_path(total_points=100):
     # These waypoints create a "curved corridor" in the deep water.

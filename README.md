@@ -118,7 +118,7 @@ All three relationships use **bi-directional cross-filtering**, allowing the Dat
 **For most users**: Clone this repository and run `deployworkspace.ipynb` to deploy all 18 Fabric items in ~3 minutes with automatic dependency management.
 
 ```bash
-git clone https://github.com/dorirabin/fabricdemo.git
+git clone -b fabriciq-maritimedemo https://github.com/dorirabin/fabricdemo.git
 cd fabricdemo
 pip install azure-identity fabric-cicd requests
 code deployworkspace.ipynb  # Open in VS Code and run cells 1-9
@@ -145,7 +145,7 @@ This repository includes an automated deployment notebook that deploys all 18 Fa
 
 2. **Git Clone**:
    ```bash
-   git clone https://github.com/dorirabin/fabricdemo.git
+   git clone -b fabriciq-maritimedemo https://github.com/dorirabin/fabricdemo.git
    cd fabricdemo
    ```
 
@@ -175,6 +175,8 @@ This repository includes an automated deployment notebook that deploys all 18 Fa
 
 4. **Verify deployment**: The notebook automatically verifies all 18 items are deployed correctly
 
+5. **Next steps**: After deployment completes, proceed to [Initialize Ontology Tables](#initialize-ontology-tables) below
+
 #### What Gets Deployed
 
 The automated deployment creates:
@@ -191,112 +193,130 @@ The automated deployment creates:
 
 > 💡 **Important**: The deployment notebook handles all dependencies automatically - workspace references, lakehouse IDs, and resource links are dynamically updated during deployment.
 
-After automated deployment completes, proceed to **Configure Security** below.
-
 ---
 
-### Manual Deployment (Alternative)
+## Initialize Ontology Tables
 
-If you prefer to deploy items manually through the Fabric portal instead of using the automated notebook:
+After automated deployment completes, you must initialize the lakehouse tables before the Power BI report will work.
 
-1. Create each Fabric item type manually in the portal (Lakehouse, Eventhouse, SemanticModel, Report, Ontology, Notebooks, Eventstream, Data Agent, Reflex, Map)
-2. Upload the corresponding files from the cloned repository to each item
-3. Manually update workspace references, lakehouse IDs, and resource links in the configurations
-4. Upload GeoJSON files from `/resources` folder to Lakehouse Files
+### Step 1: Run createOntology Notebook
 
-> ⚠️ **Manual deployment requires careful attention to dependencies**: The SemanticModel must reference the correct Lakehouse, the Ontology must link to the deployed Report, etc. The automated deployment handles this automatically.
+1. **Open Fabric portal** → Navigate to your deployed workspace
+2. **Open the `createOntology` notebook**
+3. **Run all cells** to create the lakehouse tables:
+   - `companies` - Company master data
+   - `vessels` - Vessel fleet information  
+   - `cargo` - Cargo types and handling classes
+   - `policies` - Insurance policy details
+   - `maritimezones` - Geographic risk zones
+
+### Step 2: Refresh the SemanticModel
+
+After the tables are created, refresh the SemanticModel to register the metadata:
+
+1. **In Fabric portal**, navigate to the `maritimeSM` SemanticModel
+2. **Click "Refresh now"** in the toolbar
+3. **Wait for refresh to complete** (~30 seconds)
+   - This validates the schema and registers lakehouse metadata
+   - DirectLake models require this initial metadata refresh
+
+### Step 3: Verify the Report
+
+1. **Open the `Vessels By Company` report**
+2. **Verify data appears** in all visuals
+3. If you see errors like "table is not refreshed", repeat Step 2
+
+> ✅ **Once complete**, the report will work and the ontology will be ready for the Data Agent!
 
 ---
 
 ## Post-Deployment Configuration
 
-After deploying the Fabric items (either automated or manual), complete the following configuration steps:
+After deploying the Fabric items and initializing the ontology, you need to configure **3 parameters** in the vessel notebooks before running them.
 
-### 1. Configure Security and API Keys
+### Configure Vessel Notebooks (runVessels*)
 
-This solution requires API keys and connection strings to connect to external services (AisStream.io) and Fabric resources.
+The three `runVessels` notebooks require 3 parameters that must be configured before running:
 
-#### Production Environment (Recommended: Azure Key Vault)
+#### 📋 Required Parameters
 
-For **production deployments**, use **Azure Key Vault** to maintain enterprise security:
+| Parameter | Description | How to obtain |
+| --------- | ----------- | ------------- |
+| **`AISSTREAM_API_KEY`** | API key for AisStream.io real-time AIS data | See [Step 1](#step-1-get-aisstream-api-key) below |
+| **`FABRIC_ENTITY_NAME`** | Event Hub name from Eventstream endpoint | See [Step 2](#step-2-get-eventstream-connection-details) below |
+| **`FABRIC_CONNECTION_STR`** | Event Hub connection string from Eventstream | See [Step 2](#step-2-get-eventstream-connection-details) below |
 
-1. Create a Key Vault and add the secrets listed in [🔑 Secret Keys](#-secret-keys) below.
-2. Ensure your Fabric identity has **"Key Vault Secrets User"** access to the Key Vault.
-3. Update the `runVessels.ipynb` notebook to fetch secrets using `mssparkutils.credentials.getSecret()`.
+#### Step 1: Get AisStream API Key
 
-#### Local Testing/Development (Direct Keys)
+1. **Create a free account** at [AisStream.io](https://aisstream.io/)
+2. **Navigate to your dashboard** after logging in
+3. **Generate an API key** (usually under "API Keys" or "Account Settings")
+4. **Copy the generated key** - you'll use this for `AISSTREAM_API_KEY`
 
-For **local testing and development**, you can directly embed keys in the notebooks:
+> 📖 **Authentication docs**: <https://aisstream.io/documentation#Authentication>
 
-1. Open the notebook files (e.g., `runVessels.ipynb`)
-2. Replace Key Vault references with direct string values:
-   ```python
-   # Instead of: ais_api_key = mssparkutils.credentials.getSecret("your-keyvault", "AisStreamApiKey")
-   # Use: ais_api_key = "your-actual-api-key-here"
-   ```
-3. **⚠️ IMPORTANT**: Never commit notebooks with embedded secrets to source control. Add them to `.gitignore` or use environment variables.
+#### Step 2: Get Eventstream Connection Details
 
-> 💡 **Best Practice**: Use Key Vault for production and team environments. Use direct keys only for local experimentation on your development machine.
+After deploying the Eventstream, retrieve the Event Hub name and connection string:
 
-#### 🔑 Secret Keys
+1. **Open Fabric portal**: https://app.fabric.microsoft.com
+2. **Navigate to your deployed workspace**
+3. **Open the `maritimeES` Eventstream**
+4. **Click on `LiveAISSource`** (Custom Endpoint in the diagram)
+5. **Go to `SAS Key Authentication` tab → `Live view`**
+6. **Copy both values**:
+   - **Event Hub name** (e.g., `esehchxkj881x95xl1hgnk_eh`) → use for `FABRIC_ENTITY_NAME`
+   - **Connection string** (starts with `Endpoint=sb://...`) → use for `FABRIC_CONNECTION_STR`
 
-The following credentials are required for the solution to function:
+> ⚠️ **Why manual?** These values are unique per deployment and cannot be predicted or retrieved via API.
 
-| Secret name | Description | How to obtain | Required for |
-| ----------- | ----------- | ------------- | ------------ |
-| `AisStreamApiKey` | API key used to authenticate to the **AisStream.io** real-time AIS WebSocket feed consumed by `runVessels.ipynb`. | **Must be generated** — see below. | Real-time vessel telemetry streaming |
-| `FabricConnectionString` | Connection string used to write telemetry into your Fabric Eventhouse / Lakehouse. | From your Fabric workspace item settings. | Data ingestion |
+#### Step 3: Update Notebook Configuration Cells
 
-**For Production**: Store these as secrets in Azure Key Vault with the names shown above.  
-**For Local Testing**: Use the values directly in your notebook code (but never commit them to Git).
+Open each of the 3 notebooks and update their **first configuration cell**:
 
-**Generating the AisStream.io API key**
+**Files to update:**
+- `runVessels.Notebook/notebook-content.py`
+- `runVesselswithSimulation.Notebook/notebook-content.py`
+- `runVesselswithSimulation2.Notebook/notebook-content.py`
 
-The `AisStreamApiKey` is not provided with this repo — you must generate your own:
+**Configuration cell (first code cell in each notebook):**
 
-1. Create a free account at **[AisStream.io](https://aisstream.io/)**.
-2. Generate an API key from your account dashboard.
-3. Follow the official authentication guide: **<https://aisstream.io/documentation#Authentication>**.
-4. **For Production**: Add the generated key to Key Vault as the secret named `AisStreamApiKey`.  
-   **For Local Testing**: Use the key directly in your notebook code.
+```python
+# ===== CONFIGURATION =====
 
-> The AisStream.io WebSocket API requires this key to be sent in the subscription message on connect. Without a valid key the live telemetry stream in `runVessels.ipynb` will fail to authenticate. See the [Authentication docs](https://aisstream.io/documentation#Authentication) for the exact message format.
+# 1. AisStream.io API Key
+AISSTREAM_API_KEY = "your-key-from-aisstream-dashboard"  # ← UPDATE THIS
 
-### 2. Run the Vessel & Simulation Notebooks (populate the Eventhouse)
+# 2. Eventstream Event Hub Name (from Step 2 above)
+FABRIC_ENTITY_NAME = "esehchxkj881x95xl1hgnk_eh"  # ← UPDATE THIS
 
-> ⚠️ **IMPORTANT: Update Eventstream Connection Details First**  
-> Before running the vessel notebooks, you must update the Eventstream custom endpoint connection details:
-> 
-> **Why**: The `LiveAISSource` Eventstream custom endpoint regenerates with a new Event Hub name and connection string after Git deployment. The hardcoded `FABRIC_ENTITY_NAME` and connection string in the notebooks will be stale and point to the old endpoint.
-> 
-> **How to fix**:
-> 1. Open the `maritimeES` Eventstream in the Fabric portal
-> 2. Navigate to the custom endpoint (LiveAISSource) settings
-> 3. Go to the **SAS Key Authentication** tab → **Live view**
-> 4. Copy the new **Connection string** value
-> 5. Update the notebooks (`runVessels.ipynb`, `runVesselswithSimulation.ipynb`, `runVesselswithSimulation2.ipynb`) with:
->    - The new connection string
->    - The new entity name (extract from `EntityPath=` in the connection string)
-> 
-> **💡 Pro Tip**: Instead of hardcoding `FABRIC_ENTITY_NAME`, parse it from the connection string:
-> ```python
-> # Extract entity name from connection string automatically
-> import re
-> connection_string = "Endpoint=sb://...;EntityPath=eventstream-xxxxx-..."
-> entity_name = re.search(r'EntityPath=([^;]+)', connection_string).group(1)
-> ```
-> This way you only need to update the connection string, and the entity name is derived automatically.
+# 3. Eventstream Connection String (from Step 2 above)
+# Option A (Production): Use Azure Key Vault
+KEY_VAULT_NAME = "https://kv-maritime-demo.vault.azure.net/"  # ← UPDATE THIS
+FABRIC_CONNECTION_STR = mssparkutils.credentials.getSecret(KEY_VAULT_NAME, "FabricConnectionString")
 
-Run these notebooks **first** — they land the real and simulated ship telemetry into the Eventhouse tables that everything else depends on:
+# Option B (Local Testing): Use direct value (NEVER commit to Git!)
+# FABRIC_CONNECTION_STR = "Endpoint=sb://xxxxx.servicebus.windows.net/;SharedAccessKeyName=...;SharedAccessKey=...;EntityPath=esehchxkj881x95xl1hgnk_eh"  # ← UPDATE THIS
+```
+
+> 💡 **Best Practice**:  
+> - **Production**: Store `FABRIC_CONNECTION_STR` in Azure Key Vault (Option A)  
+> - **Local Testing**: Use direct values (Option B) but **never commit to source control**
+
+#### Step 4: Run the Notebooks
+
+After configuring all 3 parameters, run the notebooks to populate the Eventhouse:
 
 * **`runVessels.ipynb`**: Creates **real data points** from the live AIS stream — run this to generate and stream real-time telemetry from **[AisStream.io](https://aisstream.io/)** into your Eventhouse.
 * **`runVesselswithSimulation.ipynb`** and **`runVesselswithSimulation2.ipynb`**: Create **two simulated ship itineraries** that deliberately cross the defined risk zones, also streaming into the Eventhouse.
 
 Together these populate the Eventhouse tables (including the `LatestShipPositionsEnriched` materialized view) with the distinct ships — real and simulated — that the ontology is built from.
 
-### 3. Initialize the Ontology
+---
 
-Import the `createOntology.ipynb` notebook into your Fabric Workspace and run it. It reads the ship data landed in the Eventhouse (Step 2) to populate the **base master/entity tables inside the Lakehouse** (Vessels, Companies, Cargo, Policies). These base tables are the foundation for the rest of the solution:
+### Initialize the Ontology
+
+Run the `createOntology` notebook (already deployed in your workspace). It reads the ship data landed in the Eventhouse (Step 2) to populate the **base master/entity tables inside the Lakehouse** (Vessels, Companies, Cargo, Policies). These base tables are the foundation for the rest of the solution:
 
 * **Semantic model** — the `maritimeSM` Direct Lake semantic model is built on top of these Lakehouse tables.
 * **Report** — the Power BI report (`Vessels By Company`) is built on top of that semantic model.

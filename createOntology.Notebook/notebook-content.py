@@ -34,7 +34,7 @@ from pyspark.sql.functions import col, rand, when, lit, expr, round
 # CELL ********************
 
 # Configuration: Update these values after deployment
-kusto_cluster = "https://trd-sketzz3a64smc48ffd.z1.kusto.fabric.microsoft.com"
+kusto_cluster = "https://trd-znswuqqv177qz3xhu6.z8.kusto.fabric.microsoft.com"
 kusto_db = "maritimeEH"
 
 # METADATA ********************
