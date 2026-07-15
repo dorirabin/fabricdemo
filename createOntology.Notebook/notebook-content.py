@@ -33,7 +33,9 @@ from pyspark.sql.functions import col, rand, when, lit, expr, round
 
 # CELL ********************
 
-# Configuration: Update these values after deployment
+# Configuration: These values are automatically updated during deployment
+# kusto_cluster - Eventhouse KQL cluster URI (auto-configured)
+# kusto_db - KQL Database name
 kusto_cluster = "https://trd-sketzz3a64smc48ffd.z1.kusto.fabric.microsoft.com"
 kusto_db = "maritimeEH"
 
