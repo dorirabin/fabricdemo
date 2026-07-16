@@ -30,7 +30,11 @@
       "name": "RiskLevel",
       "redefines": null,
       "baseTypeNamespaceType": null,
-      "valueType": "String"
+      "valueType": "String",
+      "semanticEnrichment": {
+        "description": "levels are integers",
+        "customAttributes": {}
+      }
     },
     {
       "id": "7053639201396315964",
