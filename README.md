@@ -229,14 +229,14 @@ After deploying the Eventstream, retrieve the Event Hub name and connection stri
    - **Event Hub name** (e.g., `esehchxkj881x95xl1hgnk_eh`) → use for `FABRIC_ENTITY_NAME`
    - **Connection string** (starts with `Endpoint=sb://...`) → use for `FABRIC_CONNECTION_STR`
 
-#### Update Notebook Configuration Cells
+#### Update Notebook Configuration Cells in Fabric Workspace
 
-Open each of the 3 notebooks and update their **first configuration cell**:
+**Open each notebook in the Fabric portal** and update the **first configuration cell**:
 
-**Files to update:**
-- `runVessels.Notebook/notebook-content.py`
-- `runVesselswithSimulation.Notebook/notebook-content.py`
-- `runVesselswithSimulation2.Notebook/notebook-content.py`
+**Notebooks to configure in Fabric:**
+- `runVessels`
+- `runVesselswithSimulation`
+- `runVesselswithSimulation2`
 
 **Configuration cell (first code cell in each notebook):**
 
@@ -261,6 +261,7 @@ FABRIC_CONNECTION_STR = mssparkutils.credentials.getSecret(KEY_VAULT_NAME, "Fabr
 > 💡 **Best Practice**:  
 > - **Production**: Store `FABRIC_CONNECTION_STR` in Azure Key Vault (Option A)  
 > - **Local Testing**: Use direct values (Option B) but **never commit to source control**
+> - **Git Repository**: Keep Git files in template state - configuration is workspace-specific
 
 ### 2. Run Vessel Notebooks to Populate Eventhouse
 
@@ -331,7 +332,7 @@ Follow the official Microsoft documentation for complete setup instructions:
 This guide covers:
 - Creating an Azure AI Search resource
 - Creating and populating a search index with the policy documents from `/resources` folder
-- Connecting the search index to your Data Agent in Fabric portal
+- **Adding Azure AI Search as a data source** to your `maritimeDA` Data Agent in Fabric portal
 
 > 💡 **Import Policy Documents**: Use the Azure Portal's **Import wizard with Vector Search capability** to index the policy documents. See: [Import and vectorize data using the Azure portal](https://learn.microsoft.com/en-us/azure/search/search-get-started-portal-import-vectors?tabs=storage-access%2Cblob-storage%2Caoai%2Cvectorize-images)
 
@@ -349,46 +350,7 @@ Three complementary sources:
 | 2 | **`maritimeOntologyfromSM`** | Ontology | Business context: Vessel → Company/Cargo/Policy relationships |
 | 3 | **Azure AI Search** | Vector index (RAG) | Policy clauses, warranties, exclusions from `/resources` documents |
 
-### Agent Instructions (System Prompt)
-
-The agent is configured with instructions along these lines:
-
-```text
-You are the Maritime Risk Assessment "Company Brain."
-Answer questions about vessels, their operators, cargo, insurance policies, and
-real-time risk exposure.
-
-Grounding rules:
-- Always resolve a ship's CURRENT location from LatestShipPositionsEnriched
-  (the Eventhouse materialized view — one latest row per MMSI). Never use stale rows.
-- Use the ontology (Vessel → Company / Cargo / Policy) to enrich the ship with its
-  business and contractual context.
-- For any policy, warranty, coverage-limit, deductible, or exclusion question,
-  retrieve and CITE the relevant clause from the Azure AI Search policy index.
-- A vessel is "in a risk zone" only when its latest RiskZone value is a named zone
-  (not null/none). Base risk statements on that live value.
-
-Behavior:
-- If a ship is inside a risk zone, flag elevated risk and call out any breached
-  warranties, plus the financial exposure (HullValue, CoverageLimit, Deductible).
-- If a ship is outside all risk zones, report standard coverage with no active breach.
-- Always state whether your answer is based on live position, ontology, or policy text.
-- Be concise, quantify exposure where possible, and never invent policy terms.
-```
-
-### Few-Shot Prompts
-
-These example prompts demonstrate the different, context-aware answers the agent returns depending on whether a ship is inside or outside a risk zone:
-
-| Prompt | Expected behavior |
-| ------ | ----------------- |
-| *"Where is vessel <ShipName> right now and is it in a risk zone?"* | Reads latest row from `LatestShipPositionsEnriched`; reports live lat/long + current `RiskZone`. |
-| *"What is the total risk assessment for <ShipName>?"* | Joins live position → ontology (Company `RiskRating`, `HullValue`) → policy `CoverageLimit`/`Deductible`; summarizes total exposure. |
-| *"Is <ShipName> in breach of any policy warranty?"* | If inside a risk zone, retrieves the matching warranty/exclusion clause from AI Search and flags the breach; if outside, reports no active breach. |
-| *"Which of my ships are currently inside a high-risk zone?"* | Filters `LatestShipPositionsEnriched` where `RiskZone` is a named zone; lists the affected vessels and their operators. |
-| *"What does the policy say about war-risk zones for <ShipName>?"* | Pure RAG call to the Azure AI Search policy index; quotes and cites the relevant clause. |
-
-> 💡 Try the same prompt twice — once while a simulated ship is **inside** a risk zone and once while it is **outside** — to see the agent's grounded response change in real time.
+> ⚠️ **Important**: After completing the [Post-Deployment Configuration](#post-deployment-configuration), you must **add Azure AI Search as a data source** to the `maritimeDA` Data Agent in Fabric portal. See [Step 7: Configure Azure AI Search](#7-configure-azure-ai-search-for-policy-documents) for detailed instructions.
 
 ### Testing the Data Agent
 
