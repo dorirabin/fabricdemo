@@ -1,4 +1,4 @@
-# 🚢 Maritime AI Agent Demo: Knowledge Graph + RAG Risk Intelligence
+# 🚢 Maritime AI Agent Demo: Fabric IQ + RAG Risk Intelligence
 
 An end-to-end Microsoft Fabric demo featuring a Data Agent that combines real-time vessel tracking, maritime Ontology (knowledge graph), and RAG-powered policy search to deliver AI-driven risk assessments for insurance underwriting.
 
