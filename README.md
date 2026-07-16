@@ -1,6 +1,6 @@
-# 🚢 Maritime Risk Assessment Data Agent ("Company Brain")
+# 🚢 Maritime AI Agent Demo: Knowledge Graph + RAG Risk Intelligence
 
-A maritime insurance "Company Brain" that fuses real-time vessel telemetry with policy documentation to enable AI-driven risk and compliance checks.
+An end-to-end Microsoft Fabric demo featuring a Data Agent that combines real-time vessel tracking, maritime Ontology (knowledge graph), and RAG-powered policy search to deliver AI-driven risk assessments for insurance underwriting.
 
 ## 🏗 High-Level Architecture
 
