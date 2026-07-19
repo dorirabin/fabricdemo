@@ -118,7 +118,7 @@ All relationships use **bi-directional cross-filtering** for ontology traversal 
 **For most users**: Clone this repository and run `deployworkspace.ipynb` to deploy all 18 Fabric items in ~3 minutes with automatic dependency management.
 
 ```bash
-git clone -b fabriciq-maritimedemo https://github.com/dorirabin/fabricdemo.git
+git clone https://github.com/dorirabin/fabricdemo.git
 cd fabricdemo
 pip install azure-identity fabric-cicd requests
 code deployworkspace.ipynb  # Open in VS Code and run cells 1-9
@@ -141,7 +141,7 @@ This repository includes an automated deployment notebook that deploys all 18 Fa
 
 2. **Git Clone**:
    ```bash
-   git clone -b fabriciq-maritimedemo https://github.com/dorirabin/fabricdemo.git
+   git clone https://github.com/dorirabin/fabricdemo.git
    cd fabricdemo
    ```
 
