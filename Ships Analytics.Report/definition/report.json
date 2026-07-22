@@ -9,6 +9,15 @@
         "report": "3.3.0",
         "page": "2.3.1"
       }
+    },
+    "customTheme": {
+      "name": "ExecutiveDark-cfaa9962.json",
+      "reportVersionAtImport": {
+        "visual": "2.10.0",
+        "report": "3.4.0",
+        "page": "2.3.1"
+      },
+      "type": "RegisteredResources"
     }
   },
   "resourcePackages": [
@@ -20,6 +29,17 @@
           "name": "CY26SU05",
           "path": "BaseThemes/CY26SU05.json",
           "type": "BaseTheme"
+        }
+      ]
+    },
+    {
+      "name": "RegisteredResources",
+      "type": "RegisteredResources",
+      "items": [
+        {
+          "name": "ExecutiveDark-cfaa9962.json",
+          "path": "ExecutiveDark-cfaa9962.json",
+          "type": "CustomTheme"
         }
       ]
     }
