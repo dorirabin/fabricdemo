@@ -2,11 +2,11 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.10.0/schema.json",
   "name": "v_hullbytype",
   "position": {
-    "x": 650,
-    "y": 475,
+    "x": 420,
+    "y": 462,
     "z": 2003,
-    "height": 230,
-    "width": 590
+    "height": 243,
+    "width": 360
   },
   "visual": {
     "visualType": "clusteredColumnChart",

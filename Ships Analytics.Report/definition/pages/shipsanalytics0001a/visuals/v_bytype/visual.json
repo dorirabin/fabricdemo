@@ -5,8 +5,8 @@
     "x": 40,
     "y": 230,
     "z": 2000,
-    "height": 230,
-    "width": 590
+    "height": 222,
+    "width": 360
   },
   "visual": {
     "visualType": "clusteredBarChart",

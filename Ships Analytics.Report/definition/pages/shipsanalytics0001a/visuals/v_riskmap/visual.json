@@ -1,0 +1,404 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.10.0/schema.json",
+  "name": "v_riskmap",
+  "position": {
+    "x": 800,
+    "y": 230,
+    "z": 2004,
+    "height": 475,
+    "width": 440
+  },
+  "visual": {
+    "visualType": "esriVisual",
+    "query": {
+      "queryState": {
+        "Location": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "maritimezones"
+                    }
+                  },
+                  "Property": "ZonePolygonGeoJSON"
+                }
+              },
+              "queryRef": "maritimezones.ZonePolygonGeoJSON",
+              "nativeQueryRef": "First ZonePolygonGeoJSON"
+            }
+          ]
+        },
+        "Color": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "maritimezones"
+                    }
+                  },
+                  "Property": "ZoneName"
+                }
+              },
+              "queryRef": "maritimezones.ZoneName",
+              "nativeQueryRef": "ZoneName"
+            }
+          ]
+        }
+      }
+    },
+    "objects": {
+      "categoryAxis": [
+        {
+          "properties": {
+            "showAxisTitle": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "valueAxis": [
+        {
+          "properties": {
+            "showAxisTitle": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "dataPoint": [
+        {
+          "properties": {}
+        }
+      ],
+      "shape": [
+        {
+          "properties": {
+            "datasourceType": {
+              "expr": {
+                "Literal": {
+                  "Value": "'file_upload'"
+                }
+              }
+            },
+            "mapUrl": {
+              "expr": {
+                "Literal": {
+                  "Value": "''"
+                }
+              }
+            },
+            "projectionEnum": {
+              "expr": {
+                "Literal": {
+                  "Value": "'albersUsa'"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "mapControls": [
+        {
+          "properties": {
+            "defaultStyle": {
+              "expr": {
+                "Literal": {
+                  "Value": "'road'"
+                }
+              }
+            },
+            "showStylePicker": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            },
+            "showNavigationControls": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            },
+            "showSelectionControl": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            },
+            "zoom": {
+              "expr": {
+                "Literal": {
+                  "Value": "5.24D"
+                }
+              }
+            },
+            "centerLatitude": {
+              "expr": {
+                "Literal": {
+                  "Value": "48.000261566012966D"
+                }
+              }
+            },
+            "centerLongitude": {
+              "expr": {
+                "Literal": {
+                  "Value": "-2.3750850000000128D"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "categoryLabels": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "bubbleLayer": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "filledMap": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "mapTransparency": {
+              "expr": {
+                "Literal": {
+                  "Value": "40L"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "mapTools": [
+        {
+          "properties": {
+            "basemaps": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "share": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "mapObject": [
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "'{\"portalUrl\":\"https://www.arcgis.com\",\"version\":\"2.4\",\"isAuthorNamedUser\":false,\"map\":{\"webmap\":{\"is3d\":false,\"itemData\":{\"operationalLayers\":[{\"id\":\"MyLayer\",\"visibility\":true,\"opacity\":1,\"minScale\":0,\"maxScale\":0,\"refreshInterval\":0,\"title\":\"ZonePolygonGeoJSON\",\"objectIdField\":\"objectId\",\"type\":\"DataLayer\",\"layerType\":\"ArcGISFeatureLayer\",\"popupEnabled\":true,\"disablePopup\":false,\"visible\":true,\"geometryType\":\"polygon\",\"source\":[{\"attributes\":{},\"geometry\":{\"rings\":[],\"type\":\"polygon\",\"spatialReference\":{\"latestWkid\":3857,\"wkid\":102100}}}],\"spatialReference\":{\"latestWkid\":3857,\"wkid\":102100},\"esriMaps\":{\"isTimeEnabled\":\"false\",\"clusterInfo\":null,\"lastShareInfo\":null},\"timeInfo\":null,\"showLabels\":true,\"featureCollection\":{\"layers\":[{\"popupInfo\":{\"popupElements\":[{\"type\":\"fields\",\"fieldInfos\":[{\"fieldName\":\"maritimezones_ZonePolygonGeoJSON\",\"isEditable\":true,\"label\":\"ZonePolygonGeoJSON\",\"tooltip\":\"\",\"visible\":true},{\"fieldName\":\"maritimezones_ZoneName\",\"isEditable\":true,\"label\":\"ZoneName\",\"tooltip\":\"\",\"visible\":true},{\"fieldName\":\"ROW_ID\",\"format\":{\"digitSeparator\":true,\"places\":0},\"isEditable\":true,\"label\":\"ROW_ID\",\"tooltip\":\"\",\"visible\":true}]}],\"expressionInfos\":[],\"fieldInfos\":[{\"fieldName\":\"maritimezones_ZonePolygonGeoJSON\",\"isEditable\":true,\"label\":\"ZonePolygonGeoJSON\",\"tooltip\":\"\",\"visible\":true},{\"fieldName\":\"maritimezones_ZoneName\",\"isEditable\":true,\"label\":\"ZoneName\",\"tooltip\":\"\",\"visible\":true},{\"fieldName\":\"ROW_ID\",\"format\":{\"digitSeparator\":true,\"places\":0},\"isEditable\":true,\"label\":\"ROW_ID\",\"tooltip\":\"\",\"visible\":true}],\"title\":\"\",\"actions\":[]},\"layerDefinition\":{\"objectIdField\":\"objectId\",\"fields\":[{\"alias\":\"objectId\",\"editable\":false,\"name\":\"objectId\",\"nullable\":false,\"type\":\"esriFieldTypeOID\"},{\"alias\":\"ZonePolygonGeoJSON\",\"editable\":true,\"length\":-1,\"name\":\"maritimezones_ZonePolygonGeoJSON\",\"nullable\":true,\"type\":\"esriFieldTypeString\"},{\"alias\":\"ZoneName\",\"editable\":true,\"length\":-1,\"name\":\"maritimezones_ZoneName\",\"nullable\":true,\"type\":\"esriFieldTypeString\"},{\"alias\":\"ROW_ID\",\"editable\":true,\"name\":\"ROW_ID\",\"nullable\":true,\"type\":\"esriFieldTypeInteger\"}],\"geometryType\":\"polygon\",\"drawingInfo\":{\"renderer\":{\"type\":\"uniqueValue\",\"visualVariables\":[],\"field1\":\"maritimezones_ZoneName\",\"legendOptions\":{\"title\":\"ZoneName\"},\"defaultLabel\":\"Other\",\"defaultSymbol\":{\"type\":\"esriSFS\",\"color\":[170,170,170,255],\"outline\":{\"type\":\"esriSLS\",\"color\":[153,153,153,255],\"width\":0.75,\"style\":\"esriSLSSolid\"},\"style\":\"esriSFSSolid\"},\"uniqueValueGroups\":[{\"classes\":[{\"description\":\"\",\"label\":\"Iran High Risk Zone - Strait of Hormuz\",\"symbol\":{\"type\":\"esriSFS\",\"color\":[179,0,0,178],\"outline\":{\"type\":\"esriSLS\",\"color\":[255,255,255,204],\"width\":1,\"style\":\"esriSLSSolid\"},\"style\":\"esriSFSSolid\"},\"values\":[[\"Iran High Risk Zone - Strait of Hormuz\"]]},{\"description\":\"\",\"label\":\"Western Transit Corridor\",\"symbol\":{\"type\":\"esriSFS\",\"color\":[235,220,120,178],\"outline\":{\"type\":\"esriSLS\",\"color\":[255,255,255,204],\"width\":1,\"style\":\"esriSLSSolid\"},\"style\":\"esriSFSSolid\"},\"values\":[[\"Western Transit Corridor\"]]}]}],\"uniqueValueInfos\":[{\"description\":\"\",\"label\":\"Iran High Risk Zone - Strait of Hormuz\",\"symbol\":{\"type\":\"esriSFS\",\"color\":[179,0,0,178],\"outline\":{\"type\":\"esriSLS\",\"color\":[255,255,255,204],\"width\":1,\"style\":\"esriSLSSolid\"},\"style\":\"esriSFSSolid\"},\"value\":\"Iran High Risk Zone - Strait of Hormuz\"},{\"description\":\"\",\"label\":\"Western Transit Corridor\",\"symbol\":{\"type\":\"esriSFS\",\"color\":[235,220,120,178],\"outline\":{\"type\":\"esriSLS\",\"color\":[255,255,255,204],\"width\":1,\"style\":\"esriSLSSolid\"},\"style\":\"esriSFSSolid\"},\"value\":\"Western Transit Corridor\"}]},\"transparency\":0},\"featureReduction\":null,\"locationProvider\":{\"type\":\"geojsongeometry\",\"lookupFields\":[{\"lookupField\":\"shapeFieldName\",\"outField\":\"maritimezones_ZonePolygonGeoJSON\"}],\"sourceSR\":{\"wkid\":4326},\"targetSR\":102100},\"minScale\":0,\"maxScale\":0,\"definitionExpression\":null,\"templates\":[{\"name\":\"New Feature\",\"description\":\"\",\"prototype\":{\"attributes\":{\"maritimezones_ZonePolygonGeoJSON\":null,\"maritimezones_ZoneName\":null,\"ROW_ID\":null}}}],\"elevationInfo\":null,\"name\":\"ZonePolygonGeoJSON\",\"type\":\"DataLayer\",\"queryParameters\":{\"tableId\":\"\"}},\"featureSet\":{\"features\":[{\"attributes\":{},\"geometry\":{\"rings\":[],\"type\":\"polygon\",\"spatialReference\":{\"latestWkid\":3857,\"wkid\":102100}}}]}}]}}],\"tables\":[],\"baseMap\":{\"baseMapLayers\":[{\"id\":\"World_Imagery\",\"layerType\":\"ArcGISTiledMapServiceLayer\",\"url\":\"https://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer\",\"visibility\":true,\"opacity\":1,\"title\":\"World Imagery\"}],\"title\":\"Imagery\",\"origItemId\":\"c29cfb7875fc4b97b58ba6987c460862\"},\"version\":\"2.26\",\"authoringApp\":\"ArcGIS for Power BI\",\"authoringAppVersion\":\"2026.2.991\",\"bookmarks\":[],\"initialState\":{\"viewpoint\":{\"targetGeometry\":{\"spatialReference\":{\"latestWkid\":3857,\"wkid\":102100},\"xmin\":6045189.86395504,\"ymin\":2956215.0160350716,\"xmax\":6222218.021463499,\"ymax\":3091661.4301563967}}}}},\"webmapExtensions\":{\"format\":2}},\"embedCheckPassed\":true}'"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "visualContainerObjects": {
+      "dropShadow": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "color": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#000000'"
+                    }
+                  }
+                }
+              }
+            },
+            "preset": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Custom'"
+                }
+              }
+            },
+            "shadowSpread": {
+              "expr": {
+                "Literal": {
+                  "Value": "0L"
+                }
+              }
+            },
+            "shadowBlur": {
+              "expr": {
+                "Literal": {
+                  "Value": "8L"
+                }
+              }
+            },
+            "angle": {
+              "expr": {
+                "Literal": {
+                  "Value": "90L"
+                }
+              }
+            },
+            "shadowDistance": {
+              "expr": {
+                "Literal": {
+                  "Value": "3L"
+                }
+              }
+            },
+            "transparency": {
+              "expr": {
+                "Literal": {
+                  "Value": "70L"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "background": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "color": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#1A2138'"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      ],
+      "border": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "color": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#2A3350'"
+                    }
+                  }
+                }
+              }
+            },
+            "radius": {
+              "expr": {
+                "Literal": {
+                  "Value": "8L"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Risk Zones'"
+                }
+              }
+            },
+            "fontColor": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#F1F5F9'"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "drillFilterOtherVisuals": true
+  },
+  "howCreated": "Copilot"
+}

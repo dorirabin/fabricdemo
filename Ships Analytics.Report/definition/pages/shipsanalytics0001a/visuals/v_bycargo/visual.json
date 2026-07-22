@@ -3,10 +3,10 @@
   "name": "v_bycargo",
   "position": {
     "x": 40,
-    "y": 475,
+    "y": 462,
     "z": 2002,
-    "height": 230,
-    "width": 590
+    "height": 243,
+    "width": 360
   },
   "visual": {
     "visualType": "donutChart",
