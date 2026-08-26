@@ -18,6 +18,8 @@ table maritimezones
 		summarizeBy: none
 		sourceColumn: ZoneName
 
+		changedProperty = IsHidden
+
 		annotation SummarizationSetBy = Automatic
 
 	column RiskLevel

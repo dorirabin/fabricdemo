@@ -1,0 +1,12 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "KQLDatabase",
+    "displayName": "ehformcp",
+    "description": "ehformcp"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "04899c09-5766-b6e2-44ff-b22cce8cf3c7"
+  }
+}

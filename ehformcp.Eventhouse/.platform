@@ -1,0 +1,12 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "Eventhouse",
+    "displayName": "ehformcp",
+    "description": "ehformcp"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "6318c4b0-30b2-9ce1-4be8-49d1320398f9"
+  }
+}

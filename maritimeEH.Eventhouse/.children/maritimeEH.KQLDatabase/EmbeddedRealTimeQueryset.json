@@ -51,6 +51,18 @@
         "content": "LatestShipPositionsEnriched\n|take 10",
         "title": "",
         "dataSourceId": "603f7202-8740-4f59-b98c-a8c0dc5e10a3"
+      },
+      {
+        "id": "d4f5067e-3b8a-429c-a2f1-948509f10a59",
+        "content": ".show commands-and-queries\n| where StartedOn > ago(14d)\n//| where MemoryPeak > 1073741824\n| summarize Hits = count(),\n            MaxGB = round(max(MemoryPeak)/1024.0/1024.0/1024.0, 2)\n  by bin(StartedOn, 1h)\n| order by StartedOn asc",
+        "title": "",
+        "dataSourceId": "603f7202-8740-4f59-b98c-a8c0dc5e10a3"
+      },
+      {
+        "id": "43aa6e13-a25e-4a65-bbb2-f5b3db33badf",
+        "content": "//See how many records are in the table.\nmaritimeAIS\n| count\n\n.alter-merge table maritimeAIS policy merge ```\n{\n  \"MaxRangeInHours\": 24\n}```\n\n\n.show table maritimeAIS policy merge\n\n",
+        "title": "",
+        "dataSourceId": "603f7202-8740-4f59-b98c-a8c0dc5e10a3"
       }
     ]
   }

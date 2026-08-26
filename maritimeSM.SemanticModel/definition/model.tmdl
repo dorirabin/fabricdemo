@@ -1,6 +1,7 @@
 model Model
 	culture: en-US
 	defaultPowerBIDataSourceVersion: powerBI_V3
+	discourageImplicitMeasures
 	sourceQueryCulture: en-US
 	dataAccessOptions
 		legacyRedirects
@@ -10,7 +11,7 @@ annotation PBI_QueryOrder = ["DirectLake - maritimeLH"]
 
 annotation __PBI_TimeIntelligenceEnabled = 1
 
-annotation PBI_ProTooling = ["DirectLakeOnOneLakeInWeb","WebModelingEdit","DaxQueryView_Desktop"]
+annotation PBI_ProTooling = ["DirectLakeOnOneLakeInWeb","WebModelingEdit","DaxQueryView_Desktop","CalcGroup"]
 
 ref table companies
 ref table vessels

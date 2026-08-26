@@ -1,18 +1,15 @@
 relationship 10c0449d-6b69-b1db-181c-78d74240c1cb
 	crossFilteringBehavior: bothDirections
-	toCardinality: one
 	fromColumn: vessels.CargoID
 	toColumn: cargomaster.CargoID
 
 relationship 96fca349-f212-a775-00ea-cfcfc8a60df0
 	crossFilteringBehavior: bothDirections
-	toCardinality: one
 	fromColumn: vessels.PolicyID
 	toColumn: policies.PolicyID
 
 relationship bdce8e0b-696a-c105-0c2f-bcd004f5410d
 	crossFilteringBehavior: bothDirections
-	toCardinality: one
 	fromColumn: vessels.CompanyID
 	toColumn: companies.CompanyID
 
