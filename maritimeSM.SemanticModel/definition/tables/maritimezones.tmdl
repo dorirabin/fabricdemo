@@ -1,11 +1,9 @@
 table maritimezones
 	lineageTag: d95afa16-b653-4572-a6e7-a8b7b982c2b1
-	sourceLineageTag: [dbo].[maritimezones]
 
 	column ZoneID
 		dataType: string
-		lineageTag: 0687b1a6-dd5a-4e44-9a51-000789bc54e2
-		sourceLineageTag: ZoneID
+		lineageTag: f2ff5142-c41e-4128-b5ee-318772dd1f1c
 		summarizeBy: none
 		sourceColumn: ZoneID
 
@@ -13,49 +11,46 @@ table maritimezones
 
 	column ZoneName
 		dataType: string
-		lineageTag: bfa40b7f-cdf7-44ac-ab29-5ed7e805be9b
-		sourceLineageTag: ZoneName
+		lineageTag: 89e97459-b3b3-46b8-ae16-20064c701755
 		summarizeBy: none
 		sourceColumn: ZoneName
-
-		changedProperty = IsHidden
 
 		annotation SummarizationSetBy = Automatic
 
 	column RiskLevel
 		dataType: string
-		lineageTag: 3dc5b992-184f-49e1-80c2-2edd794f9c28
-		sourceLineageTag: RiskLevel
+		lineageTag: bd38e205-c95a-416f-b1f3-48b8e07d1a2b
 		summarizeBy: none
 		sourceColumn: RiskLevel
 
 		annotation SummarizationSetBy = Automatic
 
 	column PremiumMultiplier
-		dataType: decimal
-		formatString: \$#,0.###############;(\$#,0.###############);\$#,0.###############
-		lineageTag: 6e81e373-36bf-4956-ba6d-0e741f5f9ff9
-		sourceLineageTag: PremiumMultiplier
+		dataType: double
+		lineageTag: a436497e-4a82-4374-b4d0-234006717d8f
 		summarizeBy: sum
 		sourceColumn: PremiumMultiplier
 
 		annotation SummarizationSetBy = Automatic
 
-		annotation PBI_FormatHint = {"currencyCulture":"en-US"}
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
 
 	column ZonePolygonGeoJSON
 		dataType: string
-		lineageTag: a1578dd3-3b38-496e-9820-259ad41f0fe2
-		sourceLineageTag: ZonePolygonGeoJSON
+		lineageTag: 6783d9fe-1580-460b-98a3-2dd0a41b6b40
 		summarizeBy: none
 		sourceColumn: ZonePolygonGeoJSON
 
 		annotation SummarizationSetBy = Automatic
 
-	partition maritimezones = entity
-		mode: directLake
-		source
-			entityName: maritimezones
-			schemaName: dbo
-			expressionSource: 'DirectLake - maritimeLH'
+	partition maritimezones = m
+		mode: import
+		source =
+				let
+					Source = Lakehouse.Contents(null),
+					Workspace = Source{[workspaceId="821daf86-9ecb-4d7f-a7d9-9cc3c0541028"]}[Data],
+					Artifact = Workspace{[lakehouseId="e840bf2c-5866-42e4-91c2-3e6aca5ede5e"]}[Data],
+					Table = Artifact{[Name="maritimezones", ItemKind="Table", Schema="dbo"]}[Data]
+				in
+					Table
 

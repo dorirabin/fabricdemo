@@ -1,12 +1,18 @@
 table vessels
 	lineageTag: 8a85fe4c-c4f0-4d57-be91-2921be2b6b4b
-	sourceLineageTag: [dbo].[vessels]
+
+	column CompanyID
+		dataType: string
+		lineageTag: eb71daae-a42c-4556-8f4e-cdbc374c0705
+		summarizeBy: none
+		sourceColumn: CompanyID
+
+		annotation SummarizationSetBy = Automatic
 
 	column MMSI
 		dataType: int64
 		formatString: 0
-		lineageTag: 3899b825-ee97-40b2-8a4c-fad712788537
-		sourceLineageTag: MMSI
+		lineageTag: 57776e61-a252-490c-abfc-a8d2cc9de6a1
 		summarizeBy: sum
 		sourceColumn: MMSI
 
@@ -14,8 +20,7 @@ table vessels
 
 	column ShipName
 		dataType: string
-		lineageTag: 3224cffe-2954-46ef-b202-17b46d88536f
-		sourceLineageTag: ShipName
+		lineageTag: ac326e0d-a329-4eff-8b05-e5c26c30e6ac
 		summarizeBy: none
 		sourceColumn: ShipName
 
@@ -23,8 +28,7 @@ table vessels
 
 	column VesselType
 		dataType: string
-		lineageTag: 359f9a69-bc14-4816-886d-7ff2481a0c8d
-		sourceLineageTag: VesselType
+		lineageTag: 8c450cc8-9773-4cdd-9405-21b08d251dae
 		summarizeBy: none
 		sourceColumn: VesselType
 
@@ -33,8 +37,7 @@ table vessels
 	column YearBuilt
 		dataType: int64
 		formatString: 0
-		lineageTag: d01a41b6-1e05-44d5-9775-1a28dcd3e7cd
-		sourceLineageTag: YearBuilt
+		lineageTag: 51e0baf5-7b66-4d51-b371-18e114144c6f
 		summarizeBy: sum
 		sourceColumn: YearBuilt
 
@@ -43,8 +46,7 @@ table vessels
 	column HullValue
 		dataType: int64
 		formatString: 0
-		lineageTag: f4798abe-4c04-48b0-9f19-d2f36645d64b
-		sourceLineageTag: HullValue
+		lineageTag: db8d6c9f-7f6d-423f-8afb-489d62c0bc14
 		summarizeBy: sum
 		sourceColumn: HullValue
 
@@ -52,8 +54,7 @@ table vessels
 
 	column PolicyID
 		dataType: string
-		lineageTag: 2ef78a9f-9d86-413e-8dfd-6c62bfa83946
-		sourceLineageTag: PolicyID
+		lineageTag: 87031bfd-c852-4fb2-9043-7f37b0aafe0c
 		summarizeBy: none
 		sourceColumn: PolicyID
 
@@ -61,35 +62,28 @@ table vessels
 
 	column CargoID
 		dataType: string
-		lineageTag: 7d409268-0724-409f-89ae-34e26a780697
-		sourceLineageTag: CargoID
+		lineageTag: 2486dd29-e78f-46ed-8e39-80b2f6335a8a
 		summarizeBy: none
 		sourceColumn: CargoID
 
 		annotation SummarizationSetBy = Automatic
 
-	column CompanyID
-		dataType: string
-		lineageTag: d55da35b-2d3a-420d-bbb2-89dc8fad1a60
-		sourceLineageTag: CompanyID
-		summarizeBy: none
-		sourceColumn: CompanyID
-
-		annotation SummarizationSetBy = Automatic
-
 	column CompanyName
 		dataType: string
-		lineageTag: 51db2975-f81d-4a32-937d-bccbb6997635
-		sourceLineageTag: CompanyName
+		lineageTag: cebae417-8b42-4c6f-937b-e70232de789b
 		summarizeBy: none
 		sourceColumn: CompanyName
 
 		annotation SummarizationSetBy = Automatic
 
-	partition vessels = entity
-		mode: directLake
-		source
-			entityName: vessels
-			schemaName: dbo
-			expressionSource: 'DirectLake - maritimeLH'
+	partition vessels = m
+		mode: import
+		source =
+				let
+					Source = Lakehouse.Contents(null),
+					Workspace = Source{[workspaceId="821daf86-9ecb-4d7f-a7d9-9cc3c0541028"]}[Data],
+					Artifact = Workspace{[lakehouseId="e840bf2c-5866-42e4-91c2-3e6aca5ede5e"]}[Data],
+					Table = Artifact{[Name="vessels", ItemKind="Table", Schema="dbo"]}[Data]
+				in
+					Table
 

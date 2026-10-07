@@ -1,11 +1,9 @@
 table cargomaster
 	lineageTag: b5a1dfbf-228f-4da9-aa02-6b046d998de6
-	sourceLineageTag: [dbo].[cargomaster]
 
 	column CargoID
 		dataType: string
-		lineageTag: 9258a908-fe29-4e4d-9155-aca6bc89fca6
-		sourceLineageTag: CargoID
+		lineageTag: 981b4ac4-e9a7-4929-b161-2439b8cd8faf
 		summarizeBy: none
 		sourceColumn: CargoID
 
@@ -13,8 +11,7 @@ table cargomaster
 
 	column CargoType
 		dataType: string
-		lineageTag: 6a5fd0a0-54cb-4192-9c63-1655d6ad400c
-		sourceLineageTag: CargoType
+		lineageTag: 18ef47ff-0258-49ce-a491-78ff4b17c711
 		summarizeBy: none
 		sourceColumn: CargoType
 
@@ -22,8 +19,7 @@ table cargomaster
 
 	column HandlingClass
 		dataType: string
-		lineageTag: 2238f6ad-317d-4a0a-b17e-ddcc25389e69
-		sourceLineageTag: HandlingClass
+		lineageTag: 928ef3cd-f204-4485-a6c3-45d3e624521f
 		summarizeBy: none
 		sourceColumn: HandlingClass
 
@@ -32,17 +28,20 @@ table cargomaster
 	column InsuredValue
 		dataType: int64
 		formatString: 0
-		lineageTag: c04bd262-53b6-48f6-9bea-df01925059f9
-		sourceLineageTag: InsuredValue
-		summarizeBy: sum
+		lineageTag: 130fb76c-f727-47d3-959c-bfcdfb4794eb
+		summarizeBy: none
 		sourceColumn: InsuredValue
 
 		annotation SummarizationSetBy = Automatic
 
-	partition cargomaster = entity
-		mode: directLake
-		source
-			entityName: cargomaster
-			schemaName: dbo
-			expressionSource: 'DirectLake - maritimeLH'
+	partition cargomaster = m
+		mode: import
+		source =
+				let
+					Source = Lakehouse.Contents(null),
+					Workspace = Source{[workspaceId="821daf86-9ecb-4d7f-a7d9-9cc3c0541028"]}[Data],
+					Artifact = Workspace{[lakehouseId="e840bf2c-5866-42e4-91c2-3e6aca5ede5e"]}[Data],
+					Table = Artifact{[Name="cargomaster", ItemKind="Table", Schema="dbo"]}[Data]
+				in
+					Table
 

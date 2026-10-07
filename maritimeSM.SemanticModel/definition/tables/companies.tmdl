@@ -1,11 +1,9 @@
 table companies
 	lineageTag: 572099ba-f3d7-4a00-b68b-d34e68805506
-	sourceLineageTag: [dbo].[companies]
 
 	column CompanyID
 		dataType: string
-		lineageTag: d1b76fce-6a10-4786-8156-72333ab3a596
-		sourceLineageTag: CompanyID
+		lineageTag: fb5e0e90-d4d6-48f7-ad3d-5db99359c18d
 		summarizeBy: none
 		sourceColumn: CompanyID
 
@@ -13,8 +11,7 @@ table companies
 
 	column CompanyName
 		dataType: string
-		lineageTag: dd6d04f3-eedb-4053-8eaa-bc77cd80185d
-		sourceLineageTag: CompanyName
+		lineageTag: 5e455977-c3ad-4ccc-befc-b91ab8c46240
 		summarizeBy: none
 		sourceColumn: CompanyName
 
@@ -22,8 +19,7 @@ table companies
 
 	column Headquarters
 		dataType: string
-		lineageTag: 58104278-5227-4490-b245-a0e742868642
-		sourceLineageTag: Headquarters
+		lineageTag: 2ede72bd-b105-4823-b890-2f860a631a5a
 		summarizeBy: none
 		sourceColumn: Headquarters
 
@@ -32,26 +28,28 @@ table companies
 	column TotalFleetSize
 		dataType: int64
 		formatString: 0
-		lineageTag: 20ede8da-4f9d-44bc-a449-173f3a2eec61
-		sourceLineageTag: TotalFleetSize
-		summarizeBy: sum
+		lineageTag: 8fe8f7ea-e375-48ad-8f10-eeee535f4c14
+		summarizeBy: none
 		sourceColumn: TotalFleetSize
 
 		annotation SummarizationSetBy = Automatic
 
 	column RiskRating
 		dataType: string
-		lineageTag: a1bc7400-fa20-440f-9c4d-13edb8c5811a
-		sourceLineageTag: RiskRating
+		lineageTag: b9a0d493-e46a-46b0-9cbf-c9e2c18fa906
 		summarizeBy: none
 		sourceColumn: RiskRating
 
 		annotation SummarizationSetBy = Automatic
 
-	partition companies = entity
-		mode: directLake
-		source
-			entityName: companies
-			schemaName: dbo
-			expressionSource: 'DirectLake - maritimeLH'
+	partition companies = m
+		mode: import
+		source =
+				let
+					Source = Lakehouse.Contents(null),
+					Workspace = Source{[workspaceId="821daf86-9ecb-4d7f-a7d9-9cc3c0541028"]}[Data],
+					Artifact = Workspace{[lakehouseId="e840bf2c-5866-42e4-91c2-3e6aca5ede5e"]}[Data],
+					Table = Artifact{[Name="companies", ItemKind="Table", Schema="dbo"]}[Data]
+				in
+					Table
 

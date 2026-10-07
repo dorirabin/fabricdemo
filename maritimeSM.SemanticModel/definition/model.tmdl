@@ -7,11 +7,11 @@ model Model
 		legacyRedirects
 		returnErrorValuesAsNull
 
-annotation PBI_QueryOrder = ["DirectLake - maritimeLH"]
+annotation PBI_QueryOrder = ["DirectLake - maritimeLH","companies","vessels","maritimezones","cargomaster","policies"]
 
 annotation __PBI_TimeIntelligenceEnabled = 1
 
-annotation PBI_ProTooling = ["DirectLakeOnOneLakeInWeb","WebModelingEdit","DaxQueryView_Desktop","CalcGroup"]
+annotation PBI_ProTooling = ["DaxQueryView_Desktop", "SLL", "WebModelingEdit", "CalcGroup", "DirectLakeOnOneLakeInWeb"]
 
 ref table companies
 ref table vessels

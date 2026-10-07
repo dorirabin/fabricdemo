@@ -1,15 +1,15 @@
-relationship 10c0449d-6b69-b1db-181c-78d74240c1cb
+relationship AutoDetected_74eea90c-7222-4d86-a24a-e7bb50307287
 	crossFilteringBehavior: bothDirections
-	fromColumn: vessels.CargoID
-	toColumn: cargomaster.CargoID
+	fromColumn: vessels.CompanyID
+	toColumn: companies.CompanyID
 
-relationship 96fca349-f212-a775-00ea-cfcfc8a60df0
+relationship AutoDetected_a25fec30-00f0-4adc-b686-ef569cd69525
 	crossFilteringBehavior: bothDirections
 	fromColumn: vessels.PolicyID
 	toColumn: policies.PolicyID
 
-relationship bdce8e0b-696a-c105-0c2f-bcd004f5410d
+relationship AutoDetected_e3f0e3b6-281e-4950-9ae7-34ed3819acc3
 	crossFilteringBehavior: bothDirections
-	fromColumn: vessels.CompanyID
-	toColumn: companies.CompanyID
+	fromColumn: vessels.CargoID
+	toColumn: cargomaster.CargoID
 

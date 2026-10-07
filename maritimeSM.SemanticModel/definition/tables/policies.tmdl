@@ -1,11 +1,9 @@
 table policies
 	lineageTag: fa7a1bd5-913f-4c8f-bcaf-9a0b6089601e
-	sourceLineageTag: [dbo].[policies]
 
 	column PolicyID
 		dataType: string
-		lineageTag: 2f5468f1-fce8-451c-ab5a-24d0ebbdd91c
-		sourceLineageTag: PolicyID
+		lineageTag: f0e967cc-bdb1-45bc-be91-7c97aa5871c3
 		summarizeBy: none
 		sourceColumn: PolicyID
 
@@ -13,8 +11,7 @@ table policies
 
 	column PolicyType
 		dataType: string
-		lineageTag: a5d54d5a-f287-4296-9b7d-a32b057daa21
-		sourceLineageTag: PolicyType
+		lineageTag: 193b1c82-beaa-4de7-9256-97d4448193e3
 		summarizeBy: none
 		sourceColumn: PolicyType
 
@@ -23,9 +20,8 @@ table policies
 	column Deductible
 		dataType: int64
 		formatString: 0
-		lineageTag: e0b4dd60-f021-481f-9ba8-1c3bc07fb4c8
-		sourceLineageTag: Deductible
-		summarizeBy: sum
+		lineageTag: fb800bde-941c-4475-82b0-458aaeea5fe8
+		summarizeBy: none
 		sourceColumn: Deductible
 
 		annotation SummarizationSetBy = Automatic
@@ -33,17 +29,20 @@ table policies
 	column CoverageLimit
 		dataType: int64
 		formatString: 0
-		lineageTag: a719ee61-5362-44f0-918f-cc0b07f9b3fd
-		sourceLineageTag: CoverageLimit
-		summarizeBy: sum
+		lineageTag: 5bb23571-1a2f-4a21-a4b6-148e7748e21e
+		summarizeBy: none
 		sourceColumn: CoverageLimit
 
 		annotation SummarizationSetBy = Automatic
 
-	partition policies = entity
-		mode: directLake
-		source
-			entityName: policies
-			schemaName: dbo
-			expressionSource: 'DirectLake - maritimeLH'
+	partition policies = m
+		mode: import
+		source =
+				let
+					Source = Lakehouse.Contents(null),
+					Workspace = Source{[workspaceId="821daf86-9ecb-4d7f-a7d9-9cc3c0541028"]}[Data],
+					Artifact = Workspace{[lakehouseId="e840bf2c-5866-42e4-91c2-3e6aca5ede5e"]}[Data],
+					Table = Artifact{[Name="policies", ItemKind="Table", Schema="dbo"]}[Data]
+				in
+					Table
 
